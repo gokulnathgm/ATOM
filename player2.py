@@ -1,5 +1,5 @@
 from socketIO_client import SocketIO
-
+import random
 socketIO = SocketIO('10.7.90.8', 4000)
 print socketIO.connected
 
@@ -14,11 +14,17 @@ def connection_response(*args):
 def coin_positions(*args):
 	print 'coin positions'
 	print args
-	socketIO.emit('player_input', {'position': 200, 'force': 2000, 'angle': 120})
+
+	x = 846.7742
+	y = 193.5484
+
+	position = random.randint(200, 800)
+	force = random.randint(2000, 4000)
+	angle = random.randint(0, 180)	
+	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
 
 socketIO.emit('connect_game', {'playerKey': player2Key, 'gameKey': gameKey})
 socketIO.on('connect_game', connection_response)
 socketIO.on('your_turn', coin_positions)
-#socketIO.emit('player_input', {'position': 200, 'force': 2000, 'angle': 80})
 socketIO.wait()
 

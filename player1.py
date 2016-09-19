@@ -1,4 +1,7 @@
 from socketIO_client import SocketIO
+from sympy.geometry import *
+from sympy import sympify
+import random
 
 socketIO = SocketIO('10.7.90.8', 4000)
 print socketIO.connected
@@ -14,10 +17,39 @@ def connection_response(*args):
 def coin_positions(*args):
 	print 'coin positions'
 	print args
-	socketIO.emit('player_input', {'position': 200, 'force': 2000, 'angle': 120})
+
+	striker_x = 153.2258
+	striker_y = 193.5484
+	pocket4_x = 967.7419
+	pocket4_y = 967.7419 
+	pocket4_point = (pocket4_x, pocket4_y)
+
+	positions = args[0]['position']
+	
+	for coin in positions:
+		coin_x = coin['x']
+		coin_y = coin['y']
+		coin_point = (coin_x, coin_y)
+		Line_coin_pocket = Line(coin_point, pocket4_point)
+		path = True
+		for coin_subset in positions:
+			coin_subset_x = coin_subset['x']
+			coin_subset_y = coin_subset['y']
+			coin_subset_point = (coin_subset_x, coin_subset_y)
+			if coin_x != coin_subset_x and coin_y != coin_subset_y:
+				print float(Line_coin_pocket.perpendicular_segment(coin_subset_point).length)
+				print '\n\n\n\n\n\n\n\n'
+					#path = False
+					#break
+		# if path == True:
+		# 	print 'Path exists'
+		# 	print coin_point
+	position = 250#random.randint(200, 800)
+	force = 2500#random.randint(2000, 4000)
+	angle = 130#random.randint(0, 180)	
+	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
 
 socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
 socketIO.on('connect_game', connection_response)
 socketIO.on('your_turn', coin_positions)
 socketIO.wait()
-
