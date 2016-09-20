@@ -25,7 +25,8 @@ def coin_positions(*args):
 	pocket4_point = (pocket4_x, pocket4_y)
 
 	positions = args[0]['position']
-	
+	number_of_coins = len(positions)
+	print '{}{}'.format('Number of coins = ', number_of_coins) 
 	for coin in positions:
 		coin_x = coin['x']
 		coin_y = coin['y']
@@ -36,14 +37,17 @@ def coin_positions(*args):
 			coin_subset_x = coin_subset['x']
 			coin_subset_y = coin_subset['y']
 			coin_subset_point = (coin_subset_x, coin_subset_y)
-			if coin_x != coin_subset_x and coin_y != coin_subset_y:
-				print float(Line_coin_pocket.perpendicular_segment(coin_subset_point).length)
-				print '\n\n\n\n\n\n\n\n'
-					#path = False
-					#break
-		# if path == True:
-		# 	print 'Path exists'
-		# 	print coin_point
+			if (coin_x != coin_subset_x) and (coin_y != coin_subset_y) and (coin_subset_x > coin_x) and (coin_subset_y > coin_y) and (coin['type'] != 'stricker'):
+				path_len = float(Line_coin_pocket.perpendicular_segment(coin_subset_point).length)
+				print '{}{} to {}{} = {}'.format(coin_point, coin['type'], coin_subset_point, coin_subset['type'], path_len)
+		print '\n'
+
+	# if path:
+	# 	print '{}{}'.format('Path exists: ', coin_point)
+	# else:
+	# 	print '{}{}'.format('No path: ', coin_point)
+
+	socketIO.wait(seconds=15)
 	position = 250#random.randint(200, 800)
 	force = 2500#random.randint(2000, 4000)
 	angle = 130#random.randint(0, 180)	
