@@ -2,6 +2,7 @@ from socketIO_client import SocketIO
 from sympy.geometry import *
 from sympy import sympify
 import random
+import math
 
 socketIO = SocketIO('10.7.90.8', 4000)
 print socketIO.connected
@@ -9,6 +10,12 @@ print socketIO.connected
 player1Key = 'T8uhv56xvs'
 player2Key = 'GSwwserRd2'
 gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+
+def distance_between_points(point1, point2):
+	x1, y1 = point1[0], point1[1]
+	x2, y2 = point2[0], point2[1]
+	distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+	return distance
 
 def connection_response(*args):
 	print 'connection_response'
@@ -31,23 +38,25 @@ def coin_positions(*args):
 		coin_x = coin['x']
 		coin_y = coin['y']
 		coin_point = (coin_x, coin_y)
-		Line_coin_pocket = Line(coin_point, pocket4_point)
+		line_coin_pocket = Line(coin_point, pocket4_point)
+		distance_coin_pocket = distance_between_points(coin_point, pocket4_point)
 		path = True
 		for coin_subset in positions:
 			coin_subset_x = coin_subset['x']
 			coin_subset_y = coin_subset['y']
 			coin_subset_point = (coin_subset_x, coin_subset_y)
-			if (coin_x != coin_subset_x) and (coin_y != coin_subset_y) and (coin_subset_x > coin_x) and (coin_subset_y > coin_y) and (coin['type'] != 'stricker'):
-				path_len = float(Line_coin_pocket.perpendicular_segment(coin_subset_point).length)
-				print '{}{} to {}{} = {}'.format(coin_point, coin['type'], coin_subset_point, coin_subset['type'], path_len)
-		print '\n'
+			distance_subset_coin_pocket = distance_between_points(coin_subset_point, pocket4_point)
+			distance_between_coins = distance_between_points(coin_point, coin_subset_point)
+			if(distance_coin_pocket > distance_between_coins and distance_coin_pocket > distance_subset_coin_pocket):
+				if float(line_coin_pocket.perpendicular_segment(coin_subset_point).length) < 50:
+					path = False
+					break
+		if path:
+			print '{}{}'.format('Path exists: ', coin_point)
+		else:
+			print '{}{}'.format('No path: ', coin_point)
 
-	# if path:
-	# 	print '{}{}'.format('Path exists: ', coin_point)
-	# else:
-	# 	print '{}{}'.format('No path: ', coin_point)
-
-	socketIO.wait(seconds=15)
+	#socketIO.wait(seconds=5)
 	position = 250#random.randint(200, 800)
 	force = 2500#random.randint(2000, 4000)
 	angle = 130#random.randint(0, 180)	
