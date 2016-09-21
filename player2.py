@@ -55,15 +55,13 @@ def coin_positions(*args):
 			print '{}{}'.format('Path exists: ', coin_point)
 		else:
 			print '{}{}'.format('No path: ', coin_point)
-
-	#socketIO.wait(seconds=5)
-	position = random.randint(200, 800)
-	force = random.randint(2000, 4000)
-	angle = random.randint(0, 180)	
+	print 'Here!!!!'
+	position = 250
+	force = 2500
+	angle = 130
 	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
 
 socketIO.emit('connect_game', {'playerKey': player2Key, 'gameKey': gameKey})
 socketIO.on('connect_game', connection_response)
 socketIO.on('your_turn', coin_positions)
 socketIO.wait()
-

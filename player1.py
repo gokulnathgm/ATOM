@@ -24,13 +24,14 @@ def connection_response(*args):
 def coin_positions(*args):
 	print 'coin positions'
 	print args
+	angle = 0
 
 	striker_x = 153.2258
 	striker_y = 193.5484
 	pocket4_x = 967.7419
 	pocket4_y = 967.7419 
 	pocket4_point = (pocket4_x, pocket4_y)
-
+	strike_through = []
 	positions = args[0]['position']
 	number_of_coins = len(positions)
 	print '{}{}'.format('Number of coins = ', number_of_coins) 
@@ -52,17 +53,30 @@ def coin_positions(*args):
 					path = False
 					break
 		if path:
-			print '{}{}'.format('Path exists: ', coin_point)
-		else:
-			print '{}{}'.format('No path: ', coin_point)
+			strike_through.append(coin_point)
 
-	#socketIO.wait(seconds=5)
-	position = 250#random.randint(200, 800)
-	force = 2500#random.randint(2000, 4000)
-	angle = 130#random.randint(0, 180)	
+	for coin in strike_through:
+		circle = Circle(coin, 55)
+		line_coin_pocket = Line(coin, pocket4_point)
+		intersection_points = circle.intersection(line_coin_pocket)
+		intersection_point_x = round(float(intersection_points[0][0]))
+		intersection_point_y = round(float(intersection_points[0][1]))
+
+		point = (intersection_point_x, intersection_point_y)
+		strike_line = Line(point, pocket4_point)
+		slope = strike_line.slope
+		angle = math.degrees(math.atan(slope))
+		break
+
+	angle += 90
+	print '{} = {}'.format('Angle', angle)
+	position = 194
+	force = random.randint(2000, 4000)
+	#angle = random.randint(0, 180)	
 	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
 
 socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
 socketIO.on('connect_game', connection_response)
 socketIO.on('your_turn', coin_positions)
 socketIO.wait()
+
