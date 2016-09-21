@@ -17,6 +17,10 @@ def distance_between_points(point1, point2):
 	distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 	return distance
 
+def emit_response(*args):
+	print 'Emit response'
+	print args
+
 def connection_response(*args):
 	print 'connection_response'
 	print args
@@ -24,13 +28,14 @@ def connection_response(*args):
 def coin_positions(*args):
 	print 'coin positions'
 	print args
-	angle = 0
 
+	angle = 0
 	striker_x = 153.2258
 	striker_y = 193.5484
 	pocket4_x = 967.7419
 	pocket4_y = 967.7419 
 	pocket4_point = (pocket4_x, pocket4_y)
+	striker_point = (154, 194)
 	strike_through = []
 	positions = args[0]['position']
 	number_of_coins = len(positions)
@@ -56,6 +61,7 @@ def coin_positions(*args):
 			strike_through.append(coin_point)
 
 	for coin in strike_through:
+		print coin
 		circle = Circle(coin, 55)
 		line_coin_pocket = Line(coin, pocket4_point)
 		intersection_points = circle.intersection(line_coin_pocket)
@@ -63,17 +69,20 @@ def coin_positions(*args):
 		intersection_point_y = round(float(intersection_points[0][1]))
 
 		point = (intersection_point_x, intersection_point_y)
-		strike_line = Line(point, pocket4_point)
+		strike_line = Line(point, striker_point)
 		slope = strike_line.slope
 		angle = math.degrees(math.atan(slope))
+		angle = round(angle, 2)
 		break
 
 	angle += 90
+	angle = int(angle)
 	print '{} = {}'.format('Angle', angle)
-	position = 194
-	force = random.randint(2000, 4000)
-	#angle = random.randint(0, 180)	
+	position = 200
+	force = 2500
+	print {'position': position, 'force': force, 'angle': angle}
 	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
+	socketIO.on('player_input', emit_response)
 
 socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
 socketIO.on('connect_game', connection_response)

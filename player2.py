@@ -17,6 +17,10 @@ def distance_between_points(point1, point2):
 	distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 	return distance
 
+def emit_response(*args):
+	print 'Emit response'
+	print args
+
 def connection_response(*args):
 	print 'connection_response'
 	print args
@@ -34,32 +38,12 @@ def coin_positions(*args):
 	positions = args[0]['position']
 	number_of_coins = len(positions)
 	print '{}{}'.format('Number of coins = ', number_of_coins) 
-	for coin in positions:
-		coin_x = coin['x']
-		coin_y = coin['y']
-		coin_point = (coin_x, coin_y)
-		line_coin_pocket = Line(coin_point, pocket4_point)
-		distance_coin_pocket = distance_between_points(coin_point, pocket4_point)
-		path = True
-		for coin_subset in positions:
-			coin_subset_x = coin_subset['x']
-			coin_subset_y = coin_subset['y']
-			coin_subset_point = (coin_subset_x, coin_subset_y)
-			distance_subset_coin_pocket = distance_between_points(coin_subset_point, pocket4_point)
-			distance_between_coins = distance_between_points(coin_point, coin_subset_point)
-			if(distance_coin_pocket > distance_between_coins and distance_coin_pocket > distance_subset_coin_pocket):
-				if float(line_coin_pocket.perpendicular_segment(coin_subset_point).length) < 50:
-					path = False
-					break
-		if path:
-			print '{}{}'.format('Path exists: ', coin_point)
-		else:
-			print '{}{}'.format('No path: ', coin_point)
 	print 'Here!!!!'
-	position = 250
-	force = 2500
-	angle = 130
+	position = 300
+	force = 4000
+	angle = random.randint(20,160)
 	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
+	socketIO.on('player_input', emit_response)
 
 socketIO.emit('connect_game', {'playerKey': player2Key, 'gameKey': gameKey})
 socketIO.on('connect_game', connection_response)
