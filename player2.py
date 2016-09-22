@@ -19,7 +19,7 @@ def distance_between_points(point1, point2):
 
 def emit_response(*args):
 	print 'Emit response'
-	print args
+	print args, '\n'
 
 def connection_response(*args):
 	print 'connection_response'
@@ -41,10 +41,10 @@ def coin_positions(*args):
 	print 'Here!!!!'
 	position = 300
 	force = 4000
-	angle = random.randint(20,160)
+	angle = 0
 	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
-	socketIO.on('player_input', emit_response)
 
+socketIO.on('player_input', emit_response)
 socketIO.emit('connect_game', {'playerKey': player2Key, 'gameKey': gameKey})
 socketIO.on('connect_game', connection_response)
 socketIO.on('your_turn', coin_positions)
