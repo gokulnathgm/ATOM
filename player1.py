@@ -80,6 +80,8 @@ def coin_positions(*args):
 		for coin in strike_through_striker:
 			coin_x = coin['x']
 			coin_y = coin['y']
+			if coin_y < 194 + 30:
+				continue
 			coin_point = (coin_x, coin_y)
 			print coin_point
 			circle = Circle(coin_point, 55)
@@ -92,13 +94,13 @@ def coin_positions(*args):
 			strike_line = Line(point, striker_point)
 			slope = strike_line.slope
 			angle = math.degrees(math.atan(slope))
-			angle = round(angle, 2)
+			angle = round(angle, 4)
 			break
 	else:
 		angle = 30
 
 	angle += 90
-	angle = int(angle)
+	#angle = int(angle)
 	print '{} = {}'.format('Angle', angle)
 	position = 194
 	force = 3500
