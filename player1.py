@@ -12,17 +12,17 @@ class Namespace(BaseNamespace):
     def on_disconnect(self):
     	print ('disconnect function')
 
-socketIO = SocketIO('10.7.90.8', 4000, Namespace)
-#socketIO = SocketIO('10.7.50.25', 4000)
+#socketIO = SocketIO('10.7.90.8', 4000, Namespace)
+socketIO = SocketIO('10.7.50.25', 4000)
 print socketIO.connected
 
-player1Key = 'T8uhv56xvs'
-player2Key = 'GSwwserRd2'
-gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+# player1Key = 'T8uhv56xvs'
+# player2Key = 'GSwwserRd2'
+# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-# player1Key = 'p3'
-# player2Key = 'p4'
-# gameKey = '2'
+player1Key = 'p3'
+player2Key = 'p4'
+gameKey = '2'
 
 def distance_between_points(point1, point2):
 	x1, y1 = point1[0], point1[1]
@@ -54,7 +54,7 @@ def clean_strikes(coins, destination_point, positions, radius_total, check):
 					break
 		if path:
 			if check:
-				coin = {'x': coin['x1'], 'y': coin['y1']}
+				coin = {'x': coin['x1'], 'y': coin['y1'], 'type': coin['type']}
 				strike_through.append(coin)
 			else:
 				strike_through.append(coin)
@@ -73,12 +73,24 @@ def coin_positions(*args):
 	print 'coin positions'
 	print args
 	angle = 0
+
 	striker_x = 154
 	striker_y = 194
 	pocket4_x = 967.7419
 	pocket4_y = 967.7419 
+	pocket3_x = 153.2258
+	pocket3_y = 806.4516
+	pocket2_x = 846.7742
+	pocket2_y = 193.5484
+	pocket1_x = 153.2258
+	pocket1_y = 193.5484
+
 	pocket4_point = (pocket4_x, pocket4_y)
+	pocket3_point = (pocket3_x, pocket3_y)
+	pocket2_point = (pocket2_x, pocket2_y)
+	pocket1_point = (pocket1_x, pocket1_y)
 	striker_point = (striker_x, striker_y)
+
 	positions = args[0]['position']
 	number_of_coins = len(positions)
 	print '{}{}'.format('Number of coins = ', number_of_coins) 
@@ -98,7 +110,7 @@ def coin_positions(*args):
 		intersection_points = circle.intersection(line_coin_pocket)
 		intersection_point_x = round(float(intersection_points[0][0]))
 		intersection_point_y = round(float(intersection_points[0][1]))
-		point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y}
+		point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin['type']}
 		strike_through_pocket_modified.append(point)
 
 	strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
@@ -124,7 +136,50 @@ def coin_positions(*args):
 			angle = round(angle, 4)
 			break
 	else:
-		angle = 45
+		striker_point = (153, 806)
+		strike_through_pocket = clean_strikes(positions, pocket2_point, positions, 50, False)
+		print 'clean3: ', strike_through_pocket, '\n'
+
+		strike_through_pocket_modified = []
+		for coin in strike_through_pocket:
+			coin_x = coin['x']
+			coin_y = coin['y']
+			if coin_y < 194 + 30 and coin_x < 153 + 30:
+				continue
+			coin_point = (coin_x, coin_y)
+			circle = Circle(coin_point, 55)
+			line_coin_pocket = Line(coin_point, pocket2_point)
+			intersection_points = circle.intersection(line_coin_pocket)
+			intersection_point_x = round(float(intersection_points[0][0]))
+			intersection_point_y = round(float(intersection_points[0][1]))
+			point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin['type']}
+			strike_through_pocket_modified.append(point)
+
+		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
+		print 'clean4: ', strike_through_striker, '\n'
+
+		if strike_through_striker:
+			for coin in strike_through_striker:
+				coin_x = coin['x']
+				coin_y = coin['y']
+				if coin_y < 194 + 30 and coin_x < 153 + 30:
+					continue
+				coin_point = (coin_x, coin_y)
+				print coin_point
+				circle = Circle(coin_point, 55)
+				line_coin_pocket = Line(coin_point, pocket2_point)
+				intersection_points = circle.intersection(line_coin_pocket)
+				intersection_point_x = round(float(intersection_points[0][0]))
+				intersection_point_y = round(float(intersection_points[0][1]))
+				point = (intersection_point_x, intersection_point_y)
+				strike_line = Line(point, striker_point)
+				slope = strike_line.slope
+				angle = math.degrees(math.atan(slope))
+				angle = round(angle, 4)
+				break
+		else:
+			angle = 45
+		
 
 	angle += 90
 	#angle = int(angle)

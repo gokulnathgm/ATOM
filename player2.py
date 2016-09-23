@@ -12,17 +12,17 @@ class Namespace(BaseNamespace):
     def on_disconnect(self):
     	print ('[Disconnected]')
 
-socketIO = SocketIO('10.7.90.8', 4000, Namespace)
-#socketIO = SocketIO('10.7.50.25', 4000)
+#socketIO = SocketIO('10.7.90.8', 4000, Namespace)
+socketIO = SocketIO('10.7.50.25', 4000)
 print socketIO.connected
 
-player1Key = 'T8uhv56xvs'
-player2Key = 'GSwwserRd2'
-gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+# player1Key = 'T8uhv56xvs'
+# player2Key = 'GSwwserRd2'
+# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-# player1Key = 'p3'
-# player2Key = 'p4'
-# gameKey = '2'
+player1Key = 'p3'
+player2Key = 'p4'
+gameKey = '2'
 
 def distance_between_points(point1, point2):
 	x1, y1 = point1[0], point1[1]
@@ -53,7 +53,7 @@ def clean_strikes(coins, destination_point, positions, radius_total, check):
 					break
 		if path:
 			if check:
-				coin = {'x': coin['x1'], 'y': coin['y1']}
+				coin = {'x': coin['x1'], 'y': coin['y1'], 'type': coin['type']}
 				strike_through.append(coin)
 			else:
 				strike_through.append(coin)
@@ -97,7 +97,7 @@ def coin_positions(*args):
 		intersection_points = circle.intersection(line_coin_pocket)
 		intersection_point_x = round(float(intersection_points[0][0]))
 		intersection_point_y = round(float(intersection_points[0][1]))
-		point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y}
+		point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin['type']}
 		strike_through_pocket_modified.append(point)
 
 	strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
@@ -107,7 +107,7 @@ def coin_positions(*args):
 		for coin in strike_through_striker:
 			coin_x = coin['x']
 			coin_y = coin['y']
-			if coin_y < 194 + 30 and coin_x < 153 + 30:
+			if coin_y > 806 - 30 and coin_x > 846 - 30:
 				continue
 			coin_point = (coin_x, coin_y)
 			print coin_point
