@@ -12,17 +12,17 @@ class Namespace(BaseNamespace):
     def on_disconnect(self):
     	print ('[Disconnected]')
 
-#socketIO = SocketIO('10.7.90.8', 4000, Namespace)
-socketIO = SocketIO('10.7.50.25', 4000)
+socketIO = SocketIO('10.7.90.8', 4000, Namespace)
+#socketIO = SocketIO('10.7.50.25', 4000)
 print socketIO.connected
 
-# player1Key = 'T8uhv56xvs'
-# player2Key = 'GSwwserRd2'
-# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+player1Key = 'T8uhv56xvs'
+player2Key = 'GSwwserRd2'
+gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-player1Key = 'p3'
-player2Key = 'p4'
-gameKey = '2'
+# player1Key = 'p3'
+# player2Key = 'p4'
+# gameKey = '2'
 
 def distance_between_points(point1, point2):
 	x1, y1 = point1[0], point1[1]
@@ -129,7 +129,7 @@ def coin_positions(*args):
 	#angle = int(angle)
 	print '{} = {}'.format('Angle', angle)
 	position = 806
-	force = 3000
+	force = 4000
 	print {'position': position, 'force': force, 'angle': angle}
 	try:
 		socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
