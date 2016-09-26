@@ -133,9 +133,10 @@ def coin_positions(*args):
 			break
 
 		strike_through_pocket = clean_strikes(coin, pocket4_point, positions, 50, False)
+		print 'Red clean1:', strike_through_pocket
 
 		if strike_through_pocket:
-			'Red clean strike to pocket4 available'
+			print 'Red clean strike to pocket4 available'
 			strike_through_pocket_modified = []
 			coin_point = (coin_x, coin_y)
 			circle = Circle(coin_point, 55)
@@ -146,16 +147,16 @@ def coin_positions(*args):
 			point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin[0]['type']}
 			strike_through_pocket_modified.append(point)
 			strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
+			print 'Red clean2:', strike_through_striker
 
 			if strike_through_striker:
-				print 'Clean Red strike from striker available tp Pocket4'
+				print 'Clean Red strike from striker available to Pocket4'
 				# coin = strike_through_striker[0]
 				# coin_x = coin['x']
 				# coin_y = coin['y']
 				if coin_y < 194 + 50 or coin_x < 153 + 50:
 					continue
 				coin_point = (coin_x, coin_y)
-				print coin_point
 				circle = Circle(coin_point, 55)
 				line_coin_pocket = Line(coin_point, pocket4_point)
 				intersection_points = circle.intersection(line_coin_pocket)
@@ -233,10 +234,12 @@ def coin_positions(*args):
 					break
 
 
+	####################################
+	########## General Coins ###########
+	####################################
 	no_strike = False
 	if not red_hit:
 		print 'No clean Red strikes'
-		########## General Coins ###########
 		for i in xrange(194, 806, 100):
 			striker_ok = True	
 			striker_y = i
