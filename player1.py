@@ -19,6 +19,10 @@ player1Key = 'T8uhv56xvs'
 player2Key = 'GSwwserRd2'
 gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
+# player1Key = 'p21'
+# player2Key = 'GSwwserRd2'
+# gameKey = '2'
+
 def distance_between_points(point1, point2):
 	x1, y1 = point1[0], point1[1]
 	x2, y2 = point2[0], point2[1]
@@ -28,7 +32,6 @@ def distance_between_points(point1, point2):
 def clean_strikes(coins, destination_point, positions, radius_total, check):
 	strike_through = []
 	for coin in coins:
-		print coin
 		if check == False and coin['type'] == 'stricker':
 			continue
 
@@ -39,6 +42,8 @@ def clean_strikes(coins, destination_point, positions, radius_total, check):
 		distance_coin_pocket = distance_between_points(coin_point, destination_point)
 		path = True
 		for coin_subset in positions:
+			if coin_subset['type'] == 'stricker':
+				continue
 			coin_subset_x = coin_subset['x']
 			coin_subset_y = coin_subset['y']
 			coin_subset_point = (coin_subset_x, coin_subset_y)
@@ -72,8 +77,17 @@ def coin_positions(*args):
 
 	striker_x = 153.2258
 	striker_y = 194
+	# pocket4_x = 967.7419
+	# pocket4_y = 967.7419 
+	# pocket3_x = 32.2581
+	# pocket3_y = 967.7419
+	# pocket2_x = 967.7419
+	# pocket2_y = 32.2581
+	# pocket1_x = 32.2581
+	# pocket1_y = 32.2581
+
 	pocket4_x = 967.7419
-	pocket4_y = 967.7419 
+	pocket4_y = 967.7419
 	pocket3_x = 32.2581
 	pocket3_y = 967.7419
 	pocket2_x = 967.7419
@@ -229,7 +243,7 @@ def coin_positions(*args):
 	force = 3000
 	print {'position': position, 'force': force, 'angle': angle}
 	try:
-		socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
+		socketIO.emit('player_input', {'position': position, 'force': 3000, 'angle': angle})
 	except Exception as e:
 		print e
 

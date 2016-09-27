@@ -19,6 +19,10 @@ player1Key = 'T8uhv56xvs'
 player2Key = 'GSwwserRd2'
 gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
+player1Key = 'p22'
+player2Key = 'p21'
+gameKey = '2'
+
 def distance_between_points(point1, point2):
 	x1, y1 = point1[0], point1[1]
 	x2, y2 = point2[0], point2[1]
@@ -28,7 +32,6 @@ def distance_between_points(point1, point2):
 def clean_strikes(coins, destination_point, positions, radius_total, check):
 	strike_through = []
 	for coin in coins:
-		print coin
 		if check == False and coin['type'] == 'stricker':
 			continue
 
@@ -219,7 +222,7 @@ def coin_positions(*args):
 			else:
 				angle = -55
 
-	angle -= 90
+	angle = abs(angle)
 	print '{} = {}'.format('Angle', angle)
 	position = i
 	if no_strike:
@@ -234,7 +237,7 @@ def coin_positions(*args):
 		print e
 
 socketIO.on('player_input', emit_response)
-socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
+socketIO.emit('connect_game', {'playerKey': player2Key, 'gameKey': gameKey})
 socketIO.on('connect_game', connection_response)
 socketIO.on('your_turn', coin_positions)
 socketIO.wait()
