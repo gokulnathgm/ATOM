@@ -91,150 +91,6 @@ def coin_positions(*args):
 	number_of_coins = len(positions)
 	print '{}{}'.format('Number of coins = ', number_of_coins) 
 
-
-	############################################
-	########## Aims for the Red coin ###########
-	############################################
-	# red = []
-	# for i in positions:
-	# 	if i['type'] == 'red':
-	# 		red.extend((i['x'], i['y']))
-
-	# red_hit = False
-	# pocket2 = False
-	# for i in xrange(194, 806, 100):
-	# 	if not red:
-	# 		break
-	# 	coin = [{'x': red[0], 'y': red[1], 'type': 'red'}]
-	# 	striker_ok = True	
-	# 	striker_y = i
-	# 	striker_point = (striker_x, striker_y)
-
-	# 	for j in positions:
-	# 		if j['type'] == 'stricker':
-	# 			continue
-	# 		x = j['x']
-	# 		y = j['y']
-	# 		if (x > 99 and x < 209) and (y > striker_y - 55 and y < striker_y + 55):
-	# 			striker_ok = False
-	# 			break
-	# 	if not striker_ok:
-	# 		continue
-
-	# 	coin_x = coin[0]['x']
-	# 	coin_y = coin[0]['y']
-
-	# 	if coin_y < 194 + 50 or coin_x < 153 + 50:
-	# 		break
-
-	# 	strike_through_pocket = clean_strikes(coin, pocket4_point, positions, 50, False)
-	# 	print 'Red clean1:', strike_through_pocket
-
-	# 	if strike_through_pocket:
-	# 		print 'Red clean strike to pocket4 available'
-	# 		strike_through_pocket_modified = []
-	# 		coin_point = (coin_x, coin_y)
-	# 		circle = Circle(coin_point, 55)
-	# 		line_coin_pocket = Line(coin_point, pocket4_point)
-	# 		intersection_points = circle.intersection(line_coin_pocket)
-	# 		intersection_point_x = float(intersection_points[0][0])
-	# 		intersection_point_y = float(intersection_points[0][1])
-	# 		point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin[0]['type']}
-	# 		strike_through_pocket_modified.append(point)
-	# 		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
-	# 		print 'Red clean2:', strike_through_striker
-
-	# 		if strike_through_striker:
-	# 			print 'Clean Red strike from striker available to Pocket4'
-	# 			# coin = strike_through_striker[0]
-	# 			# coin_x = coin['x']
-	# 			# coin_y = coin['y']
-	# 			if coin_y < 194 + 50 or coin_x < 153 + 50:
-	# 				continue
-	# 			coin_point = (coin_x, coin_y)
-	# 			circle = Circle(coin_point, 55)
-	# 			line_coin_pocket = Line(coin_point, pocket4_point)
-	# 			intersection_points = circle.intersection(line_coin_pocket)
-	# 			intersection_point_x = float(intersection_points[0][0])
-	# 			intersection_point_y = float(intersection_points[0][1])
-	# 			point = (intersection_point_x, intersection_point_y)
-	# 			strike_line = Line(point, striker_point)
-	# 			slope = strike_line.slope
-	# 			angle = math.degrees(math.atan(slope))
-	# 			red_hit = True
-	# 			break
-	# 	else:
-	# 		pocket_2 = True
-
-	# if pocket2:
-	# 	for i in xrange(194, 806, 100):
-	# 		if not red:
-	# 			break
-	# 		coin = [{'x': red[0], 'y': red[1], 'type': 'red'}]
-	# 		striker_ok = True	
-	# 		striker_y = i
-	# 		striker_point = (striker_x, striker_y)
-
-	# 		for j in positions:
-	# 			if j['type'] == 'stricker':
-	# 				continue
-	# 			x = j['x']
-	# 			y = j['y']
-	# 			if (x > 99 and x < 209) and (y > striker_y - 55 and y < striker_y + 55):
-	# 				striker_ok = False
-	# 				break
-	# 		if not striker_ok:
-	# 			continue
-
-	# 		coin_x = coin[0]['x']
-	# 		coin_y = coin[0]['y']
-
-	# 		if coin_y > 846 - 50 or coin_x < 153 + 50:
-	# 			break
-
-	# 		strike_through_pocket = clean_strikes(coin, pocket2_point, positions, 50, False)
-
-	# 		if strike_through_pocket:
-	# 			'Red clean strike to pocket2 available'
-	# 			strike_through_pocket_modified = []
-	# 			coin_point = (coin_x, coin_y)
-	# 			circle = Circle(coin_point, 55)
-	# 			line_coin_pocket = Line(coin_point, pocket2_point)
-	# 			intersection_points = circle.intersection(line_coin_pocket)
-	# 			intersection_point_x = float(intersection_points[0][0])
-	# 			intersection_point_y = float(intersection_points[0][1])
-	# 			point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin[0]['type']}
-	# 			strike_through_pocket_modified.append(point)
-	# 			strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
-
-	# 			if strike_through_striker:
-	# 				print 'Clean Red strike from striker available to Pocket2'
-	# 				# coin = strike_through_striker[0]
-	# 				# coin_x = coin['x']
-	# 				# coin_y = coin['y']
-	# 				if coin_y > 846 - 50 or coin_x < 153 + 50:
-	# 					continue
-	# 				coin_point = (coin_x, coin_y)
-	# 				print coin_point
-	# 				circle = Circle(coin_point, 55)
-	# 				line_coin_pocket = Line(coin_point, pocket2_point)
-	# 				intersection_points = circle.intersection(line_coin_pocket)
-	# 				intersection_point_x = float(intersection_points[0][0])
-	# 				intersection_point_y = float(intersection_points[0][1])
-	# 				point = (intersection_point_x, intersection_point_y)
-	# 				strike_line = Line(point, striker_point)
-	# 				slope = strike_line.slope
-	# 				angle = math.degrees(math.atan(slope))
-	# 				red_hit = True
-	# 				break
-
-
-	####################################
-	########## General Coins ###########
-	####################################
-	# no_strike = False
-	# if not red_hit:
-	# 	print 'No clean Red strikes'
 	no_strike = False
 	pocket2 = True
 	for i in xrange(194, 806, 100):
@@ -257,12 +113,6 @@ def coin_positions(*args):
 
 		strike_through_pocket = clean_strikes(positions, pocket4_point, positions, 50, False)
 		print 'clean1: ', strike_through_pocket, '\n'
-
-		# white_coins = []
-		# for coin in strike_through_pocket:
-		# 	if coin['type'] == 'white':
-		# 		white_coins.append(coin)
-		# print 'white coins', white_coins
 
 		strike_through_pocket_modified = []
 		for coin in strike_through_pocket:
@@ -322,24 +172,18 @@ def coin_positions(*args):
 					striker_ok = False
 					break
 			if not striker_ok:
-				if i == 794:
+				if i == 206:
 					no_strike = True
 				continue
 
 			strike_through_pocket = clean_strikes(positions, pocket2_point, positions, 50, False)
 			print 'clean1: ', strike_through_pocket, '\n'
 
-			# white_coins = []
-			# for coin in strike_through_pocket:
-			# 	if coin['type'] == 'white':
-			# 		white_coins.append(coin)
-			# print 'white coins', white_coins
-
 			strike_through_pocket_modified = []
 			for coin in strike_through_pocket:
 				coin_x = coin['x']
 				coin_y = coin['y']
-				if coin_y < 806 - 50 or coin_x < 153 + 50:
+				if coin_y > 806 - 50 or coin_x < 153 + 50:
 					continue
 				coin_point = (coin_x, coin_y)
 				circle = Circle(coin_point, 55)
@@ -358,7 +202,7 @@ def coin_positions(*args):
 				coin_x = coin['x']
 				coin_y = coin['y']
 				print coin
-				if coin_y < 806 - 50 or coin_x < 153 + 50:
+				if coin_y > 806 - 50 or coin_x < 153 + 50:
 					continue
 				coin_point = (coin_x, coin_y)
 				print coin_point
@@ -375,11 +219,7 @@ def coin_positions(*args):
 			else:
 				angle = -55
 
-
-
-
 	angle += 90
-	#angle = int(angle)
 	print '{} = {}'.format('Angle', angle)
 	position = i
 	if no_strike:
