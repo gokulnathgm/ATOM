@@ -19,9 +19,9 @@ player1Key = 'T8uhv56xvs'
 player2Key = 'GSwwserRd2'
 gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-player1Key = 'p22'
-player2Key = 'p21'
-gameKey = '2'
+# player1Key = 'p22'
+# player2Key = 'p21'
+# gameKey = '2'
 
 def distance_between_points(point1, point2):
 	x1, y1 = point1[0], point1[1]
