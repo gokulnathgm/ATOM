@@ -7,10 +7,10 @@ from socketIO_client import BaseNamespace
 
 class Namespace(BaseNamespace):
     def on_connect(self):
-        print('[Connected]')
+        print '[Connected]'
 
     def on_disconnect(self):
-    	print ('[Disconnected]')
+    	print '[Disconnected]'
 
 socketIO = SocketIO('10.7.90.8', 4000, Namespace)
 #socketIO = SocketIO('localhost', 4000, Namespace)
@@ -185,7 +185,7 @@ def coin_positions(*args):
 				coin_pocket = ((coin_x, coin_y), (pocket4_x, pocket4_y))
 				coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 				angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
-				if angle_striker_coin_pocket < 110:
+				if angle_striker_coin_pocket < 100:
 					print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
 					continue
 				coin_point = (coin_x, coin_y)
@@ -263,7 +263,7 @@ def coin_positions(*args):
 					coin_pocket = ((coin_x, coin_y), (pocket2_x, pocket2_y))
 					coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
-					if angle_striker_coin_pocket < 110:
+					if angle_striker_coin_pocket < 100:
 						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
 						continue
 					coin_point = (coin_x, coin_y)
@@ -294,25 +294,37 @@ def coin_positions(*args):
 		if back_strike:
 			print 'Looking for a back shot'
 			coin_to_strike = positions[number_of_coins - 2]
-			print 'Attempting reverse shot on: ', coin_to_strike
 			coin_y = coin_to_strike['y']
-			if coin_y > 500:
-				striker_y = 194
+			coin_x = coin_to_strike['x']
+			coin = (coin_x, coin_y)
+			if coin_to_strike['x'] < 160:
+				print 'Attempting reverse shot on: ', coin_to_strike
+				if coin_y > 500:
+					striker_y = 194
+				else:
+					striker_y = 806
+				striker_point = (striker_x, striker_y)
+				mid_point = (striker_y + coin_y) / 2
+				point_mid_point = (1000, mid_point)
+				line_coin_mid_point = Line(striker_point, point_mid_point)
+				slope_coin_mid_point = line_coin_mid_point.slope
+				angle = math.degrees(math.atan(slope_coin_mid_point))
+				force = 4000
+				position = striker_y
 			else:
-				striker_y = 806
-			striker_point = (striker_x, striker_y)
-			mid_point = (striker_y + coin_y) / 2
-			point_mid_point = (1000, mid_point)
-			line_coin_mid_point = Line(striker_point, point_mid_point)
-			slope_coin_mid_point = line_coin_mid_point.slope
-			angle = math.degrees(math.atan(slope_coin_mid_point))
-			force = 4000
-			position = striker_y
+				print 'Attempting straight shot on: ', coin_to_strike
+				striker_y = 200
+				striker_point = (striker_x, striker_y)
+				line_coin_striker = Line(coin, striker_point)
+				slope_coin_striker = line_coin_striker.slope
+				angle = math.degrees(math.atan(slope_coin_striker))
+				force = 4000
+				position = striker_y
 
 	if set_strike_first:
 		force = 4000
-		position = 194
-		angle = 135
+		position = 750
+		angle = 60
 
 	else:			
 		angle += 90
