@@ -13,6 +13,7 @@ class Namespace(BaseNamespace):
     	print ('[Disconnected]')
 
 socketIO = SocketIO('10.7.90.8', 4000, Namespace)
+#socketIO = SocketIO('localhost', 4000, Namespace)
 print socketIO.connected
 
 player1Key = 'T8uhv56xvs'
@@ -25,6 +26,22 @@ gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
 first_strike = True
 set_strike_first = False
+
+def dot(vA, vB):
+    return vA[0] * vB[0] + vA[1] * vB[1]
+
+def ang(lineA, lineB):
+    vA = [(lineA[0][0] - lineA[1][0]), (lineA[0][1] - lineA[1][1])]
+    vB = [(lineB[0][0] - lineB[1][0]), (lineB[0][1] - lineB[1][1])]
+    dot_prod = dot(vA, vB)
+    magA = dot(vA, vA) ** 0.5
+    magB = dot(vB, vB) ** 0.5
+    angle = math.acos(dot_prod / magB / magA)
+    ang_deg = math.degrees(angle) % 360
+    if ang_deg - 180 >= 0:
+        return 360 - ang_deg
+    else: 
+        return ang_deg
 
 def distance_between_points(point1, point2):
 	x1, y1 = point1[0], point1[1]
@@ -118,6 +135,7 @@ def coin_positions(*args):
 
 		no_strike = False
 		pocket2 = True
+		back_strike = False
 		for i in xrange(194, 806, 100):
 			striker_ok = True	
 			striker_y = i
@@ -162,7 +180,13 @@ def coin_positions(*args):
 				coin_x = coin['x']
 				coin_y = coin['y']
 				print coin
-				if coin_y < 194 + 50 or coin_x < 153 + 50:
+				# if coin_y < 194 + 50 or coin_x < 153 + 50:
+				# 	continue
+				coin_pocket = ((coin_x, coin_y), (pocket4_x, pocket4_y))
+				coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
+				angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+				if angle_striker_coin_pocket < 110:
+					print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
 					continue
 				coin_point = (coin_x, coin_y)
 				print coin_point
@@ -176,9 +200,16 @@ def coin_positions(*args):
 				slope = strike_line.slope
 				angle = math.degrees(math.atan(slope))
 				pocket2 = False
+				print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
+				if angle_striker_coin_pocket >= 170:
+					force = 1000
+				elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
+					force = 2000
+				else:
+					force = 4000
 				break
 			else:
-				angle = -55
+				angle = -65
 
 		if pocket2:
 			print 'Aiming for pocket2'
@@ -227,7 +258,13 @@ def coin_positions(*args):
 					coin_x = coin['x']
 					coin_y = coin['y']
 					print coin
-					if coin_y > 806 - 50 or coin_x < 153 + 50:
+					# if coin_y > 806 - 50 or coin_x < 153 + 50:
+					# 	continue
+					coin_pocket = ((coin_x, coin_y), (pocket2_x, pocket2_y))
+					coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
+					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+					if angle_striker_coin_pocket < 110:
+						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
 						continue
 					coin_point = (coin_x, coin_y)
 					print coin_point
@@ -240,23 +277,51 @@ def coin_positions(*args):
 					strike_line = Line(point, striker_point)
 					slope = strike_line.slope
 					angle = math.degrees(math.atan(slope))
+					print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
+					if angle_striker_coin_pocket >= 170:
+						force = 1000
+					elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
+						force = 2000
+					else:
+						force = 4000
 					break
 				else:
-					angle = -65
+					# angle = -65
+					# force = 4000
+					if i == 206:
+						back_strike = True
+
+		if back_strike:
+			print 'Looking for a back shot'
+			coin_to_strike = positions[number_of_coins - 2]
+			print 'Attempting reverse shot on: ', coin_to_strike
+			coin_y = coin_to_strike['y']
+			if coin_y > 500:
+				striker_y = 194
+			else:
+				striker_y = 806
+			striker_point = (striker_x, striker_y)
+			mid_point = (striker_y + coin_y) / 2
+			point_mid_point = (1000, mid_point)
+			line_coin_mid_point = Line(striker_point, point_mid_point)
+			slope_coin_mid_point = line_coin_mid_point.slope
+			angle = math.degrees(math.atan(slope_coin_mid_point))
+			force = 4000
+			position = striker_y
 
 	if set_strike_first:
 		force = 4000
-		position = 400
-		angle = 110
+		position = 194
+		angle = 135
 
 	else:			
 		angle += 90
-		print '{} = {}'.format('Angle', angle)
-		position = i
+		print 'Angle: ', angle
+		if not back_strike:
+			position = i
 		if no_strike:
 			position = random.randint(194, 794)
 			angle = random.randint(30, 150)
-		force = 2500
 		if set_strike_first:
 			force = 4000
 			position = 500
