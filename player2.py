@@ -208,6 +208,7 @@ def coin_positions(*args):
 			if not striker_ok:
 				if i == 206:
 					no_strike = True
+				back_strike = True
 				continue
 
 			strike_through_pocket = clean_strikes(positions, pocket1_point, positions, 50, False)
@@ -255,6 +256,7 @@ def coin_positions(*args):
 				strike_line = Line(point, striker_point)
 				slope = strike_line.slope
 				angle = math.degrees(math.atan(slope))
+				back_strike = True
 				print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
 				if angle_striker_coin_pocket >= 170:
 					force = 1000
@@ -283,7 +285,7 @@ def coin_positions(*args):
 				striker_y = 806
 			striker_point = (striker_x, striker_y)
 			mid_point = (striker_y + coin_y) / 2
-			point_mid_point = (1000, mid_point)
+			point_mid_point = (0, mid_point)
 			line_coin_mid_point = Line(striker_point, point_mid_point)
 			slope_coin_mid_point = line_coin_mid_point.slope
 			angle = math.degrees(math.atan(slope_coin_mid_point))
@@ -291,14 +293,14 @@ def coin_positions(*args):
 			position = striker_y
 		else:
 			print 'Attempting straight shot on: ', coin_to_strike
-			striker_y = 200
+			striker_y = 500
 			striker_point = (striker_x, striker_y)
 			line_coin_striker = Line(coin, striker_point)
 			slope_coin_striker = line_coin_striker.slope
 			angle = math.degrees(math.atan(slope_coin_striker))
 			force = 4000
 			position = striker_y
-						
+
 	angle += 90
 	print 'Angle: ', angle
 	if not back_strike:
