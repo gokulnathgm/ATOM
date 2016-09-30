@@ -230,6 +230,7 @@ def coin_positions(*args):
 				if not striker_ok:
 					if i == 206:
 						no_strike = True
+					back_strike = True
 					continue
 
 				strike_through_pocket = clean_strikes(positions, pocket2_point, positions, 50, False)
