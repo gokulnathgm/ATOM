@@ -308,10 +308,6 @@ def coin_positions(*args):
 	if no_strike:
 		position = random.randint(194, 794)
 		angle = random.randint(30, 150)
-	if set_strike_first:
-		force = 4000
-		position = 500
-		angle = 90
 
 	print {'position': position, 'force': force, 'angle': angle}
 	try:

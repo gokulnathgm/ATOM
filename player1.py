@@ -16,13 +16,13 @@ socketIO = SocketIO('10.7.90.8', 4000, Namespace)
 #socketIO = SocketIO('localhost', 4000, Namespace)
 print socketIO.connected
 
-player1Key = 'T8uhv56xvs'
-player2Key = 'GSwwserRd2'
-gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
-
-# player1Key = 'p21'
+# player1Key = 'T8uhv56xvs'
 # player2Key = 'GSwwserRd2'
-# gameKey = '2'
+# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+
+player1Key = 'uiCjXOkVIY'
+# player2Key = 'GSwwserRd2'
+gameKey = 'TOyrdTFOOOemXjgYobdV'
 
 first_strike = True
 set_strike_first = False
@@ -175,39 +175,45 @@ def coin_positions(*args):
 			strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
 			print 'clean2: ', strike_through_striker, '\n'
 
+			striked = False
 			if strike_through_striker:
-				coin = strike_through_striker[len(strike_through_striker)-1]
-				coin_x = coin['x']
-				coin_y = coin['y']
-				print coin
-				# if coin_y < 194 + 50 or coin_x < 153 + 50:
-				# 	continue
-				coin_pocket = ((coin_x, coin_y), (pocket4_x, pocket4_y))
-				coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
-				angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
-				if angle_striker_coin_pocket < 100:
+				for coin in strike_through_striker:
+					#coin = strike_through_striker[len(strike_through_striker)-1]
+					coin_x = coin['x']
+					coin_y = coin['y']
+					print coin
+					# if coin_y < 194 + 50 or coin_x < 153 + 50:
+					# 	continue
+					coin_pocket = ((coin_x, coin_y), (pocket4_x, pocket4_y))
+					coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
+					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+					if angle_striker_coin_pocket < 100:
+						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
+						continue
+					coin_point = (coin_x, coin_y)
+					print coin_point
+					circle = Circle(coin_point, 55)
+					line_coin_pocket = Line(coin_point, pocket4_point)
+					intersection_points = circle.intersection(line_coin_pocket)
+					intersection_point_x = float(intersection_points[0][0])
+					intersection_point_y = float(intersection_points[0][1])
+					point = (intersection_point_x, intersection_point_y)
+					strike_line = Line(point, striker_point)
+					slope = strike_line.slope
+					angle = math.degrees(math.atan(slope))
+					pocket2 = False
 					print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
-					continue
-				coin_point = (coin_x, coin_y)
-				print coin_point
-				circle = Circle(coin_point, 55)
-				line_coin_pocket = Line(coin_point, pocket4_point)
-				intersection_points = circle.intersection(line_coin_pocket)
-				intersection_point_x = float(intersection_points[0][0])
-				intersection_point_y = float(intersection_points[0][1])
-				point = (intersection_point_x, intersection_point_y)
-				strike_line = Line(point, striker_point)
-				slope = strike_line.slope
-				angle = math.degrees(math.atan(slope))
-				pocket2 = False
-				print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
-				if angle_striker_coin_pocket >= 170:
-					force = 1000
-				elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
-					force = 2000
-				else:
-					force = 4000
-				break
+					if angle_striker_coin_pocket >= 170:
+						force = 1000
+					elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
+						force = 2000
+					else:
+						force = 4000
+					striked = True
+					break
+
+				if striked:
+					break
 			else:
 				angle = -65
 
@@ -254,39 +260,45 @@ def coin_positions(*args):
 				strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
 				print 'clean2: ', strike_through_striker, '\n'
 
+				striked = False
 				if strike_through_striker:
-					coin = strike_through_striker[len(strike_through_striker)-1]
-					coin_x = coin['x']
-					coin_y = coin['y']
-					print coin
-					# if coin_y > 806 - 50 or coin_x < 153 + 50:
-					# 	continue
-					coin_pocket = ((coin_x, coin_y), (pocket2_x, pocket2_y))
-					coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
-					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
-					if angle_striker_coin_pocket < 100:
+					for coin in strike_through_striker:
+						#coin = strike_through_striker[len(strike_through_striker)-1]
+						coin_x = coin['x']
+						coin_y = coin['y']
+						print coin
+						# if coin_y > 806 - 50 or coin_x < 153 + 50:
+						# 	continue
+						coin_pocket = ((coin_x, coin_y), (pocket2_x, pocket2_y))
+						coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
+						angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+						if angle_striker_coin_pocket < 100:
+							print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
+							continue
+						coin_point = (coin_x, coin_y)
+						print coin_point
+						circle = Circle(coin_point, 55)
+						line_coin_pocket = Line(coin_point, pocket2_point)
+						intersection_points = circle.intersection(line_coin_pocket)
+						intersection_point_x = float(intersection_points[0][0])
+						intersection_point_y = float(intersection_points[0][1])
+						point = (intersection_point_x, intersection_point_y)
+						strike_line = Line(point, striker_point)
+						slope = strike_line.slope
+						angle = math.degrees(math.atan(slope))
+						back_strike = False
 						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
-						continue
-					coin_point = (coin_x, coin_y)
-					print coin_point
-					circle = Circle(coin_point, 55)
-					line_coin_pocket = Line(coin_point, pocket2_point)
-					intersection_points = circle.intersection(line_coin_pocket)
-					intersection_point_x = float(intersection_points[0][0])
-					intersection_point_y = float(intersection_points[0][1])
-					point = (intersection_point_x, intersection_point_y)
-					strike_line = Line(point, striker_point)
-					slope = strike_line.slope
-					angle = math.degrees(math.atan(slope))
-					back_strike = False
-					print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
-					if angle_striker_coin_pocket >= 170:
-						force = 1000
-					elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
-						force = 2000
-					else:
-						force = 4000
-					break
+						if angle_striker_coin_pocket >= 170:
+							force = 1000
+						elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
+							force = 2000
+						else:
+							force = 4000
+						striked = True
+						break
+						
+					if striked:
+						break
 				else:
 					# angle = -65
 					# force = 4000
@@ -340,7 +352,7 @@ def coin_positions(*args):
 			force = 4000
 			position = 500
 			angle = 90
-
+	striker_point = (striker)
 	print {'position': position, 'force': force, 'angle': angle}
 	try:
 		socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
