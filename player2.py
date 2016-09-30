@@ -20,10 +20,6 @@ player1Key = 'T8uhv56xvs'
 player2Key = 'GSwwserRd2'
 gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-# player1Key = 'p21'
-# player2Key = 'GSwwserRd2'
-# gameKey = '2'
-
 first_strike = True
 set_strike_first = False
 
@@ -103,16 +99,8 @@ def coin_positions(*args):
 		print args
 		angle = 0
 
-		striker_x = 153.2258
+		striker_x = 846.7742
 		striker_y = 194
-		# pocket4_x = 967.7419
-		# pocket4_y = 967.7419 
-		# pocket3_x = 32.2581
-		# pocket3_y = 967.7419
-		# pocket2_x = 967.7419
-		# pocket2_y = 32.2581
-		# pocket1_x = 32.2581
-		# pocket1_y = 32.2581
 
 		pocket4_x = 967.7419
 		pocket4_y = 967.7419
@@ -131,10 +119,10 @@ def coin_positions(*args):
 
 		positions = args[0]['position']
 		number_of_coins = len(positions)
-		print '{}{}'.format('Number of coins = ', number_of_coins) 
+		print 'Number of coins: ', number_of_coins
 
 		no_strike = False
-		pocket2 = True
+		pocket1 = True
 		back_strike = False
 		for i in xrange(194, 806, 100):
 			striker_ok = True	
@@ -146,7 +134,7 @@ def coin_positions(*args):
 					continue
 				x = j['x']
 				y = j['y']
-				if (x > 99 and x < 209) and (y > striker_y - 55 and y < striker_y + 55):
+				if (x > 792 and x < 902) and (y > striker_y - 55 and y < striker_y + 55):
 					striker_ok = False
 					break
 			if not striker_ok:
@@ -154,18 +142,18 @@ def coin_positions(*args):
 					no_strike = True
 				continue
 
-			strike_through_pocket = clean_strikes(positions, pocket4_point, positions, 50, False)
+			strike_through_pocket = clean_strikes(positions, pocket3_point, positions, 50, False)
 			print 'clean1: ', strike_through_pocket, '\n'
 
 			strike_through_pocket_modified = []
 			for coin in strike_through_pocket:
 				coin_x = coin['x']
 				coin_y = coin['y']
-				if coin_y < 194 + 50 or coin_x < 153 + 50:
+				if coin_y < 194 + 50 or coin_x > 846 - 50:
 					continue
 				coin_point = (coin_x, coin_y)
 				circle = Circle(coin_point, 55)
-				line_coin_pocket = Line(coin_point, pocket4_point)
+				line_coin_pocket = Line(coin_point, pocket3_point)
 				intersection_points = circle.intersection(line_coin_pocket)
 				intersection_point_x = float(intersection_points[0][0])
 				intersection_point_y = float(intersection_points[0][1])
@@ -182,7 +170,7 @@ def coin_positions(*args):
 				print coin
 				# if coin_y < 194 + 50 or coin_x < 153 + 50:
 				# 	continue
-				coin_pocket = ((coin_x, coin_y), (pocket4_x, pocket4_y))
+				coin_pocket = ((coin_x, coin_y), (pocket3_x, pocket3_y))
 				coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 				angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 				if angle_striker_coin_pocket < 100:
@@ -191,7 +179,7 @@ def coin_positions(*args):
 				coin_point = (coin_x, coin_y)
 				print coin_point
 				circle = Circle(coin_point, 55)
-				line_coin_pocket = Line(coin_point, pocket4_point)
+				line_coin_pocket = Line(coin_point, pocket3_point)
 				intersection_points = circle.intersection(line_coin_pocket)
 				intersection_point_x = float(intersection_points[0][0])
 				intersection_point_y = float(intersection_points[0][1])
@@ -199,7 +187,7 @@ def coin_positions(*args):
 				strike_line = Line(point, striker_point)
 				slope = strike_line.slope
 				angle = math.degrees(math.atan(slope))
-				pocket2 = False
+				pocket1 = False
 				print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
 				if angle_striker_coin_pocket >= 170:
 					force = 1000
@@ -211,8 +199,8 @@ def coin_positions(*args):
 			else:
 				angle = -65
 
-		if pocket2:
-			print 'Aiming for pocket2'
+		if pocket1:
+			print 'Aiming for pocket1'
 			no_strike = False
 			for i in xrange(806, 194, -100):
 				striker_ok = True	
@@ -224,7 +212,7 @@ def coin_positions(*args):
 						continue
 					x = j['x']
 					y = j['y']
-					if (x > 99 and x < 209) and (y > striker_y - 55 and y < striker_y + 55):
+					if (x > 792 and x < 902) and (y > striker_y - 55 and y < striker_y + 55):
 						striker_ok = False
 						break
 				if not striker_ok:
@@ -232,18 +220,18 @@ def coin_positions(*args):
 						no_strike = True
 					continue
 
-				strike_through_pocket = clean_strikes(positions, pocket2_point, positions, 50, False)
+				strike_through_pocket = clean_strikes(positions, pocket1_point, positions, 50, False)
 				print 'clean1: ', strike_through_pocket, '\n'
 
 				strike_through_pocket_modified = []
 				for coin in strike_through_pocket:
 					coin_x = coin['x']
 					coin_y = coin['y']
-					if coin_y > 806 - 50 or coin_x < 153 + 50:
+					if coin_y > 806 - 50 or coin_x > 846 - 50:
 						continue
 					coin_point = (coin_x, coin_y)
 					circle = Circle(coin_point, 55)
-					line_coin_pocket = Line(coin_point, pocket2_point)
+					line_coin_pocket = Line(coin_point, pocket1_point)
 					intersection_points = circle.intersection(line_coin_pocket)
 					intersection_point_x = float(intersection_points[0][0])
 					intersection_point_y = float(intersection_points[0][1])
@@ -260,7 +248,7 @@ def coin_positions(*args):
 					print coin
 					# if coin_y > 806 - 50 or coin_x < 153 + 50:
 					# 	continue
-					coin_pocket = ((coin_x, coin_y), (pocket2_x, pocket2_y))
+					coin_pocket = ((coin_x, coin_y), (pocket1_x, pocket1_y))
 					coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 					if angle_striker_coin_pocket < 100:
@@ -269,7 +257,7 @@ def coin_positions(*args):
 					coin_point = (coin_x, coin_y)
 					print coin_point
 					circle = Circle(coin_point, 55)
-					line_coin_pocket = Line(coin_point, pocket2_point)
+					line_coin_pocket = Line(coin_point, pocket1_point)
 					intersection_points = circle.intersection(line_coin_pocket)
 					intersection_point_x = float(intersection_points[0][0])
 					intersection_point_y = float(intersection_points[0][1])
@@ -297,7 +285,7 @@ def coin_positions(*args):
 			coin_y = coin_to_strike['y']
 			coin_x = coin_to_strike['x']
 			coin = (coin_x, coin_y)
-			if coin_to_strike['x'] < 203:
+			if coin_to_strike['x'] > 796:
 				print 'Attempting reverse shot on: ', coin_to_strike
 				if coin_y > 500:
 					striker_y = 194
