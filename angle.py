@@ -23,8 +23,8 @@ def ang(lineA, lineB):
     else: 
         return ang_deg
 
-lineA = ((475, 475), (154, 500))
-lineB = ((475, 475), (1000, 1000))
+lineA = ((980, 980), (154, 500))
+lineB = ((980, 980), (1000, 1000))
 line = ang(lineA, lineB)
 
 print line

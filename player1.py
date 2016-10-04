@@ -16,13 +16,13 @@ socketIO = SocketIO('10.7.90.8', 4000, Namespace)
 #socketIO = SocketIO('localhost', 4000, Namespace)
 print socketIO.connected
 
-# player1Key = 'T8uhv56xvs'
-# player2Key = 'GSwwserRd2'
-# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+player1Key = 'T8uhv56xvs'
+player2Key = 'GSwwserRd2'
+gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-player1Key = 'uiCjXOkVIY'
+# player1Key = 'uiCjXOkVIY'
 # player2Key = 'GSwwserRd2'
-gameKey = 'TOyrdTFOOOemXjgYobdV'
+# gameKey = 'TOyrdTFOOOemXjgYobdV'
 
 first_strike = True
 set_strike_first = False
@@ -131,8 +131,23 @@ def coin_positions(*args):
 
 		positions = args[0]['position']
 		number_of_coins = len(positions)
-		print '{}{}'.format('Number of coins = ', number_of_coins) 
+		print 'Number of coins = ', number_of_coins
 
+		black = []
+		white = []
+		red = []
+		for coin in positions:
+			if coin['type'] == 'black':
+				black.append(coin)
+			if coin['type'] == 'white':
+				white.append(coin)
+			if coin['type'] == 'red':
+				red.append(coin)
+		positions = []
+		positions.extend(red)
+		positions.extend(white)
+		positions.extend(black)
+		
 		no_strike = False
 		pocket2 = True
 		back_strike = False
@@ -352,7 +367,6 @@ def coin_positions(*args):
 			force = 4000
 			position = 500
 			angle = 90
-	striker_point = (striker)
 	print {'position': position, 'force': force, 'angle': angle}
 	try:
 		socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
