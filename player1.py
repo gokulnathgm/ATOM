@@ -218,9 +218,9 @@ def coin_positions(*args):
 					angle = math.degrees(math.atan(slope))
 					pocket2 = False
 					print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
-					if angle_striker_coin_pocket >= 170:
+					if angle_striker_coin_pocket >= 175:
 						force = 1000
-					elif angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 170:
+					elif angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
 							force = 1500
 					elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
 						force = 2000
@@ -307,7 +307,7 @@ def coin_positions(*args):
 						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
 						if angle_striker_coin_pocket >= 175:
 							force = 1000
-						elif angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 170:
+						elif angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
 							force = 1500
 						elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
 							force = 2000
@@ -357,7 +357,7 @@ def coin_positions(*args):
 
 	if set_strike_first:
 		force = 4000
-		position = 750
+		position = 500
 		angle = 60
 
 	else:			
