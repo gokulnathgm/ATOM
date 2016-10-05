@@ -89,7 +89,7 @@ def emit_response(*args):
 
 def connection_response(*args):
 	print 'connection_response'
-	print args
+	print args, '\n'
 
 def coin_positions(*args):
 	global first_strike
@@ -101,7 +101,7 @@ def coin_positions(*args):
 	else:
 		set_strike_first = False
 		print 'coin positions'
-		print args
+		print args, '\n'
 		angle = 0
 
 		striker_x = 153.2258
@@ -132,7 +132,7 @@ def coin_positions(*args):
 
 		positions = args[0]['position']
 		number_of_coins = len(positions)
-		print 'Number of coins = ', number_of_coins
+		print 'Number of coins = ', number_of_coins, '\n'
 
 		black = []
 		white = []
@@ -204,7 +204,7 @@ def coin_positions(*args):
 					coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 					if angle_striker_coin_pocket < 140:
-						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
+						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
 						continue
 					coin_point = (coin_x, coin_y)
 					print coin_point
@@ -218,7 +218,7 @@ def coin_positions(*args):
 					slope = strike_line.slope
 					angle = math.degrees(math.atan(slope))
 					pocket2 = False
-					print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
+					print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
 					if angle_striker_coin_pocket >= 175:
 						force = 1000
 					elif angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
@@ -236,7 +236,7 @@ def coin_positions(*args):
 				angle = -65
 
 		if pocket2:
-			print 'Aiming for pocket2'
+			print 'Aiming for pocket2', '\n'
 			no_strike = False
 			for i in xrange(806, 194, -100):
 				striker_ok = True	
@@ -291,7 +291,7 @@ def coin_positions(*args):
 						coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 						angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 						if angle_striker_coin_pocket < 140:
-							print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
+							print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
 							continue
 						coin_point = (coin_x, coin_y)
 						print coin_point
@@ -305,7 +305,7 @@ def coin_positions(*args):
 						slope = strike_line.slope
 						angle = math.degrees(math.atan(slope))
 						back_strike = False
-						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket
+						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
 						if angle_striker_coin_pocket >= 175:
 							force = 1000
 						elif angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
@@ -326,17 +326,32 @@ def coin_positions(*args):
 						back_strike = True
 
 		if back_strike:
-			print 'Looking for a back shot'
+
+			striker_positions = []
+			for i in range(194,806,10):
+				valid_position = True
+				for j in positions:
+					if j['type'] == 'stricker':
+						continue
+					j_x = j['x']
+					j_y = j['y']
+					if (j_x > 99 and j_x < 209) and (j_y > i - 55 and j_y < i + 55):
+						valid_position = False
+						break
+				if valid_position:
+					striker_positions.append(i)
+
+			print 'Looking for a back shot', '\n'
 			coin_to_strike = positions[0]
 			coin_y = coin_to_strike['y']
 			coin_x = coin_to_strike['x']
 			coin = (coin_x, coin_y)
 			if coin_to_strike['x'] < 203:
-				print 'Attempting reverse shot on: ', coin_to_strike
+				print 'Attempting reverse shot on: ', coin_to_strike, '\n'
 				if coin_y > 500:
-					striker_y = 194
+					striker_y = striker_positions[len(striker_positions) - 1]
 				else:
-					striker_y = 806
+					striker_y = striker_positions[0]
 				striker_point = (striker_x, striker_y)
 				mid_point = (striker_y + coin_y) / 2
 				point_mid_point = (1000, mid_point)
@@ -347,7 +362,7 @@ def coin_positions(*args):
 				force = 4000
 				position = striker_y
 			else:
-				print 'Attempting straight shot on: ', coin_to_strike
+				print 'Attempting straight shot on: ', coin_to_strike, '\n'
 				striker_y = 194
 				striker_point = (striker_x, striker_y)
 				line_coin_striker = Line(coin, striker_point)
@@ -357,7 +372,7 @@ def coin_positions(*args):
 				position = striker_y
 
 	if set_strike_first:
-		force = 4000
+		force = 1000
 		position = 500
 		angle = 90
 
@@ -370,7 +385,7 @@ def coin_positions(*args):
 			position = random.randint(194, 794)
 			angle = random.randint(30, 150)
 		
-	print {'position': position, 'force': force, 'angle': angle}
+	print {'position': position, 'force': force, 'angle': angle}, '\n'
 	try:
 		socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
 	except Exception as e:
