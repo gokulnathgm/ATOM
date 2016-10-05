@@ -66,6 +66,7 @@ def clean_strikes(coins, destination_point, positions, radius_total, check):
 				continue
 			coin_subset_x = coin_subset['x']
 			coin_subset_y = coin_subset['y']
+
 			coin_subset_point = (coin_subset_x, coin_subset_y)
 			distance_subset_coin_pocket = distance_between_points(coin_subset_point, destination_point)
 			distance_between_coins = distance_between_points(coin_point, coin_subset_point)
@@ -358,7 +359,7 @@ def coin_positions(*args):
 	if set_strike_first:
 		force = 4000
 		position = 500
-		angle = 60
+		angle = 90
 
 	else:			
 		angle += 90
@@ -368,10 +369,7 @@ def coin_positions(*args):
 		if no_strike:
 			position = random.randint(194, 794)
 			angle = random.randint(30, 150)
-		if set_strike_first:
-			force = 4000
-			position = 500
-			angle = 90
+		
 	print {'position': position, 'force': force, 'angle': angle}
 	try:
 		socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
