@@ -236,7 +236,7 @@ def coin_positions(*args):
 				angle = -65
 
 		if pocket2:
-			print '.........................Aiming for pocket2...................', '\n'
+			print '.........................Aiming for pocket.........................' ,'\n'
 			no_strike = False
 			for i in xrange(806, 194, -100):
 				striker_ok = True	
@@ -279,6 +279,7 @@ def coin_positions(*args):
 				print 'clean2: ', strike_through_striker, '\n'
 
 				striked = False
+				back_strike = True
 				if strike_through_striker:
 					for coin in strike_through_striker:
 						#coin = strike_through_striker[len(strike_through_striker)-1]
@@ -307,7 +308,7 @@ def coin_positions(*args):
 						back_strike = False
 						print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
 						if angle_striker_coin_pocket >= 175:
-							force = 1000
+							force = 970
 						elif angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
 							force = 1500
 						elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
@@ -326,7 +327,6 @@ def coin_positions(*args):
 						back_strike = True
 
 		if back_strike:
-
 			striker_positions = []
 			for i in range(194,806,10):
 				valid_position = True
@@ -340,7 +340,6 @@ def coin_positions(*args):
 						break
 				if valid_position:
 					striker_positions.append(i)
-
 			print 'valid positions: ', striker_positions, '\n'
 			print 'Looking for a back shot', '\n'
 			coin_to_strike = positions[0]
@@ -360,7 +359,7 @@ def coin_positions(*args):
 				slope_coin_mid_point = line_coin_mid_point.slope
 				angle = math.degrees(math.atan(slope_coin_mid_point))
 				#angle += 2
-				force = 4000
+				force = 3000
 				position = striker_y
 			else:
 				print 'Attempting straight shot on: ', coin_to_strike, '\n'
@@ -372,13 +371,17 @@ def coin_positions(*args):
 				line_coin_striker = Line(coin, striker_point)
 				slope_coin_striker = line_coin_striker.slope
 				angle = math.degrees(math.atan(slope_coin_striker))
-				force = 4000
+				force = 3000
 				position = striker_y
 
 	if set_strike_first:
 		force = 4000
-		position = 455
-		angle = 109
+		position = 289.0000000000000000
+		angle = 121.0839741053701744
+
+		# force = 4000
+		# position = 500
+		# angle = 90
 
 	else:			
 		angle += 90

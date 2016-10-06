@@ -256,6 +256,7 @@ def coin_positions(*args):
 			print 'clean2: ', strike_through_striker, '\n'
 
 			striked = False
+			back_strike = True
 			if strike_through_striker:
 				for coin in strike_through_striker:
 					#coin = strike_through_striker[len(strike_through_striker)-1]
@@ -336,7 +337,7 @@ def coin_positions(*args):
 			slope_coin_mid_point = line_coin_mid_point.slope
 			angle = math.degrees(math.atan(slope_coin_mid_point))
 			#angle += 2
-			force = 4000
+			force = 3000
 			position = striker_y
 		else:
 			print 'Attempting straight shot on: ', coin_to_strike
@@ -348,7 +349,7 @@ def coin_positions(*args):
 			line_coin_striker = Line(coin, striker_point)
 			slope_coin_striker = line_coin_striker.slope
 			angle = math.degrees(math.atan(slope_coin_striker))
-			force = 4000
+			force = 3000
 			position = striker_y
 
 	angle += 90
