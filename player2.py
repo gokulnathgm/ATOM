@@ -213,7 +213,7 @@ def coin_positions(*args):
 			angle = -65
 
 	if pocket1:
-		print 'Aiming for pocket1'
+		print '...................Aiming for pocket1...................'
 		no_strike = False
 		for i in xrange(806, 194, -100):
 			striker_ok = True	
@@ -303,6 +303,21 @@ def coin_positions(*args):
 					back_strike = True
 
 	if back_strike:
+
+		striker_positions = []
+		for i in range(194,806,10):
+			valid_position = True
+			for j in positions:
+				if j['type'] == 'stricker':
+					continue
+				j_x = j['x']
+				j_y = j['y']
+				if (j_x > 792 and j_x < 902) and (j_y > i - 55 and j_y < i + 55):
+					valid_position = False
+					break
+			if valid_position:
+				striker_positions.append(i)
+
 		print 'Looking for a back shot'
 		coin_to_strike = positions[0]
 		coin_y = coin_to_strike['y']
@@ -311,21 +326,24 @@ def coin_positions(*args):
 		if coin_to_strike['x'] > 796:
 			print 'Attempting reverse shot on: ', coin_to_strike
 			if coin_y > 500:
-				striker_y = 194
+				striker_y = striker_positions[len(striker_positions) - 1]
 			else:
-				striker_y = 806
+				striker_y = striker_positions[0]
 			striker_point = (striker_x, striker_y)
 			mid_point = (striker_y + coin_y) / 2
 			point_mid_point = (0, mid_point)
 			line_coin_mid_point = Line(striker_point, point_mid_point)
 			slope_coin_mid_point = line_coin_mid_point.slope
 			angle = math.degrees(math.atan(slope_coin_mid_point))
-			angle += 2
+			#angle += 2
 			force = 4000
 			position = striker_y
 		else:
 			print 'Attempting straight shot on: ', coin_to_strike
-			striker_y = 500
+			if coin_y > 500:
+				striker_y = striker_positions[len(striker_positions) - 1]
+			else:
+				striker_y = striker_positions[0]
 			striker_point = (striker_x, striker_y)
 			line_coin_striker = Line(coin, striker_point)
 			slope_coin_striker = line_coin_striker.slope
