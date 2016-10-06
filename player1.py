@@ -16,13 +16,13 @@ socketIO = SocketIO('10.7.90.8', 4000, Namespace)
 #socketIO = SocketIO('localhost', 4000, Namespace)
 print socketIO.connected
 
-player1Key = 'T8uhv56xvs'
-player2Key = 'GSwwserRd2'
-gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
-
-# player1Key = 'uiCjXOkVIY'
+# player1Key = 'T8uhv56xvs'
 # player2Key = 'GSwwserRd2'
-# gameKey = 'TOyrdTFOOOemXjgYobdV'
+# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+
+player1Key = 'qmpFr4tgkS'
+player2Key = 'GSwwserRd2'
+gameKey = 'gTwbgpl5rMva2SdprD2w'
 
 first_strike = True
 set_strike_first = False
@@ -236,7 +236,7 @@ def coin_positions(*args):
 				angle = -65
 
 		if pocket2:
-			print '.........................Aiming for pocket.........................' ,'\n'
+			print '.........................Aiming for pocket2.........................' ,'\n'
 			no_strike = False
 			for i in xrange(806, 194, -100):
 				striker_ok = True	
