@@ -16,13 +16,13 @@ socketIO = SocketIO('10.7.90.8', 4000, Namespace)
 #socketIO = SocketIO('localhost', 4000, Namespace)
 print socketIO.connected
 
-# player1Key = 'T8uhv56xvs'
-# player2Key = 'GSwwserRd2'
-# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
-
-player1Key = 'qmpFr4tgkS'
+player1Key = 'T8uhv56xvs'
 player2Key = 'GSwwserRd2'
-gameKey = 'gTwbgpl5rMva2SdprD2w'
+gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+
+# player1Key = 'qmpFr4tgkS'
+# player2Key = 'GSwwserRd2'
+# gameKey = 'gTwbgpl5rMva2SdprD2w'
 
 first_strike = True
 set_strike_first = False
@@ -149,6 +149,9 @@ def coin_positions(*args):
 		positions.extend(white)
 		positions.extend(black)
 		
+		strike_through_pocket = clean_strikes(positions, pocket4_point, positions, 50, False)
+		print 'clean1: ', strike_through_pocket, '\n'
+
 		no_strike = False
 		pocket2 = True
 		back_strike = False
@@ -169,9 +172,6 @@ def coin_positions(*args):
 				if i == 794:
 					no_strike = True
 				continue
-
-			strike_through_pocket = clean_strikes(positions, pocket4_point, positions, 50, False)
-			print 'clean1: ', strike_through_pocket, '\n'
 
 			strike_through_pocket_modified = []
 			for coin in strike_through_pocket:
@@ -238,6 +238,10 @@ def coin_positions(*args):
 		if pocket2:
 			print '.........................Aiming for pocket2.........................' ,'\n'
 			no_strike = False
+
+			strike_through_pocket = clean_strikes(positions, pocket2_point, positions, 50, False)
+			print 'clean1: ', strike_through_pocket, '\n'
+
 			for i in xrange(806, 194, -100):
 				striker_ok = True	
 				striker_y = i
@@ -256,9 +260,6 @@ def coin_positions(*args):
 						no_strike = True
 					back_strike = True
 					continue
-
-				strike_through_pocket = clean_strikes(positions, pocket2_point, positions, 50, False)
-				print 'clean1: ', strike_through_pocket, '\n'
 
 				strike_through_pocket_modified = []
 				for coin in strike_through_pocket:
