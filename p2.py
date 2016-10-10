@@ -28,8 +28,8 @@ def coin_positions(*args):
 	print args, '\n'
 
 	position = random.randint(200, 800)
-	angle = random.randint(30, 150)	
-	socketIO.emit('player_input', {'position': 500, 'force': 4000, 'angle': 90})
+	angle = random.randint(0, 180)	
+	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
 	socketIO.on('player_input', emit_response)
 
 socketIO.emit('connect_game', {'playerKey': player2Key, 'gameKey': gameKey})

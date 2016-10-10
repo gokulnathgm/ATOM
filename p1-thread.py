@@ -18,16 +18,11 @@ class Namespace(BaseNamespace):
     	print '[Disconnected]'
 
 socketIO = SocketIO('10.7.90.8', 4000, Namespace)
-#socketIO = SocketIO('localhost', 4000, Namespace)
 print socketIO.connected
 
 player1Key = 'T8uhv56xvs'
 player2Key = 'GSwwserRd2'
 gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
-
-# player1Key = 'qmpFr4tgkS'
-# player2Key = 'GSwwserRd2'
-# gameKey = 'gTwbgpl5rMva2SdprD2w'
 
 first_strike = True
 set_strike_first = False
@@ -122,7 +117,6 @@ def coin_positions(*args):
 	return_dict = manager.dict()
 	global first_strike
 	global set_strike_first
-	global position, force, angle, pocket4_results, pocket2_results
 	if first_strike:
 		first_strike = False
 		angle = 90
@@ -183,10 +177,27 @@ def coin_positions(*args):
 					large, angle = coin['angle_mutual'], coin['angle_mutual']
 					position = coin['position']
 					force = coin['force']
-		result = []
-		result.extend(red)
-		result.extend(white)
-		result.extend(black)
+		# result = []
+		# result.extend(red)
+		# result.extend(white)
+		# result.extend(black)
+
+		red = sorted(red, key=lambda k: k['angle'], reverse=True) 
+		white = sorted(white, key=lambda k: k['angle'], reverse=True) 
+		black = sorted(black, key=lambda k: k['angle'], reverse=True) 
+
+		if red:
+			angle = red[0]['angle']
+			force = red[0]['force']
+			position = red[0]['position']
+		elif white:
+			angle = white[0]['angle']
+			force = white[0]['force']
+			position = white[0]['position']
+		elif black:
+			angle = black[0]['angle']
+			force = black[0]['force']
+			position = black[0]['position']
 
 	print {'position': position, 'force': force, 'angle': angle}, '\n'
 	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
