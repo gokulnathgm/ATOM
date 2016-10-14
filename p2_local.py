@@ -8,7 +8,7 @@ print socketIO.connected
 
 player1Key = 'p11'
 player2Key = 'p12'
-gameKey = '2'
+gameKey = '1'
 
 # player1Key = 'p21'
 # player2Key = 'p22'

@@ -112,6 +112,25 @@ def connection_response(*args):
 
 def coin_positions(*args):
 	positions = args[0]['position']
+	positions = args[0]['position']
+	number_of_coins = len(positions)
+	print 'Number of coins = ', number_of_coins, '\n'
+
+	black = []
+	white = []
+	red = []
+	for coin in positions:
+		if coin['type'] == 'black':
+			black.append(coin)
+		if coin['type'] == 'white':
+			white.append(coin)
+		if coin['type'] == 'red':
+			red.append(coin)
+	positions = []
+	positions.extend(red)
+	positions.extend(white)
+	positions.extend(black)
+
 	manager = Manager()
 	return_dict = manager.dict()
 	global first_strike
@@ -189,8 +208,6 @@ def coin_positions(*args):
 			for i in range(194,806,10):
 				valid_position = True
 				for j in positions:
-					if j['type'] == 'stricker':
-						continue
 					j_x = j['x']
 					j_y = j['y']
 					if (j_x > 99 and j_x < 209) and (j_y > i - 55 and j_y < i + 55):
@@ -199,7 +216,7 @@ def coin_positions(*args):
 				if valid_position:
 					striker_positions.append(i)
 			print 'valid positions: ', striker_positions, '\n'
-			coin_to_strike = positions[len(positions) - 2]
+			coin_to_strike = positions[0]
 			coin_y = coin_to_strike['y']
 			coin_x = coin_to_strike['x']
 			coin = (coin_x, coin_y)
@@ -209,7 +226,7 @@ def coin_positions(*args):
 					striker_y = striker_positions[len(striker_positions) - 1]
 				else:
 					striker_y = striker_positions[0]
-					
+
 				striker_point = (striker_x, striker_y)
 				mid_point = (striker_y + coin_y) / 2
 				point_mid_point = (1000, mid_point)
@@ -231,6 +248,7 @@ def coin_positions(*args):
 				angle = math.degrees(math.atan(slope_coin_striker))
 				force = 3000
 				position = striker_y
+			angle += 90
 
 
 	print {'position': position, 'force': force, 'angle': angle}, '\n'
