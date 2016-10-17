@@ -236,11 +236,14 @@ def coin_positions(*args):
 			print 'Attempting reverse shot on: ', coin_to_strike, '\n'
 			if coin_y > 500:
 				striker_y = striker_positions[len(striker_positions) - 1]
+				mid_point = (striker_y + coin_y) / 2
+				mid_point -= 25
 			else:
 				striker_y = striker_positions[0]
+				mid_point = (striker_y + coin_y) / 2
+				mid_point += 25
 
 			striker_point = (striker_x, striker_y)
-			mid_point = (striker_y + coin_y) / 2
 			point_mid_point = (0, mid_point)
 			line_coin_mid_point = Line(striker_point, point_mid_point)
 			slope_coin_mid_point = line_coin_mid_point.slope
@@ -258,7 +261,7 @@ def coin_positions(*args):
 			line_coin_striker = Line(coin, striker_point)
 			slope_coin_striker = line_coin_striker.slope
 			angle = math.degrees(math.atan(slope_coin_striker))
-			force = 3000
+			force = 2500
 			position = striker_y
 		angle += 90
 

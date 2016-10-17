@@ -245,8 +245,12 @@ def coin_positions(*args):
 				print 'Attempting reverse shot on: ', coin_to_strike, '\n'
 				if coin_y > 500:
 					striker_y = striker_positions[len(striker_positions) - 1]
+					mid_point = (striker_y + coin_y) / 2
+					mid_point -= 25
 				else:
 					striker_y = striker_positions[0]
+					mid_point = (striker_y + coin_y) / 2
+					mid_point += 25
 
 				striker_point = (striker_x, striker_y)
 				mid_point = (striker_y + coin_y) / 2
