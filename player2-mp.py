@@ -210,7 +210,7 @@ def coin_positions(*args):
 		coin_y = coin_to_strike['y']
 		coin_x = coin_to_strike['x']
 		coin = (coin_x, coin_y)
-		if coin_to_strike['x'] < 203:
+		if coin_to_strike['x'] < 796:
 			print 'Attempting reverse shot on: ', coin_to_strike, '\n'
 			if coin_y > 500:
 				striker_y = striker_positions[len(striker_positions) - 1]
