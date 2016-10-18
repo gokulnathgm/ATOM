@@ -113,20 +113,20 @@ def coin_positions(*args):
 	number_of_coins = len(positions)
 	print 'Number of coins = ', number_of_coins, '\n'
 
-	black = []
-	white = []
-	red = []
+	black_coins = []
+	white_coins = []
+	red_coin = []
 	for coin in positions:
 		if coin['type'] == 'black':
-			black.append(coin)
+			black_coins.append(coin)
 		if coin['type'] == 'white':
-			white.append(coin)
+			white_coins.append(coin)
 		if coin['type'] == 'red':
-			red.append(coin)
+			red_coin.append(coin)
 	positions = []
-	positions.extend(red)
-	positions.extend(white)
-	positions.extend(black)
+	positions.extend(red_coin)
+	positions.extend(white_coins)
+	positions.extend(black_coins)
 
 	manager = Manager()
 	return_dict = manager.dict()
@@ -195,22 +195,23 @@ def coin_positions(*args):
 	if not result:
 
 		back_coins = []
-		for coin in red:
+		for coin in red_coin:
 			y = coin['y']
 			if y > 807 or y < 193:
 				back_coins.append(coin)
 		if not back_coins:
-			for coin in white:
+			for coin in white_coins:
 				y = coin['y']
 				if y > 807 or y < 193:
 					back_coins.append(coin)
 		if not back_coins:
-			for coin in black:
+			for coin in black_coins:
 				y = coin['y']
 				if y > 807 or y < 193:
 					back_coins.append(coin)
 
 		print '\nlooking for a reverse/straight shot\n'
+		print '\nback coins\n', back_coins
 		striker_positions = []
 		for i in range(194,806,10):
 			valid_position = True
@@ -225,10 +226,10 @@ def coin_positions(*args):
 		print 'valid positions: ', striker_positions, '\n'
 		if back_coins:
 			coin_to_strike = back_coins[0]
-			force = 2500
+			#force = 2500
 		else:
 			coin_to_strike = positions[0]
-			force = 2000
+			#force = 2000
 		coin_y = coin_to_strike['y']
 		coin_x = coin_to_strike['x']
 		coin = (coin_x, coin_y)
@@ -236,12 +237,12 @@ def coin_positions(*args):
 			print 'Attempting reverse shot on: ', coin_to_strike, '\n'
 			if coin_y > 500:
 				striker_y = striker_positions[len(striker_positions) - 1]
-				mid_point = (striker_y + coin_y) / 2
-				mid_point -= 25
+				mid_point = (striker_y + coin_y - 25) / 2
+				#mid_point -= 25
 			else:
 				striker_y = striker_positions[0]
-				mid_point = (striker_y + coin_y) / 2
-				mid_point += 25
+				mid_point = (striker_y + coin_y + 25) / 2
+				#mid_point += 25
 
 			striker_point = (striker_x, striker_y)
 			point_mid_point = (0, mid_point)
@@ -249,7 +250,7 @@ def coin_positions(*args):
 			slope_coin_mid_point = line_coin_mid_point.slope
 			angle = math.degrees(math.atan(slope_coin_mid_point))
 			#angle += 2
-			#force = 3000
+			force = 2500
 			position = striker_y
 		else:
 			print 'Attempting straight shot on: ', coin_to_strike, '\n'
@@ -261,7 +262,7 @@ def coin_positions(*args):
 			line_coin_striker = Line(coin, striker_point)
 			slope_coin_striker = line_coin_striker.slope
 			angle = math.degrees(math.atan(slope_coin_striker))
-			force = 4000
+			force = 2500
 			position = striker_y
 		angle += 90
 
