@@ -304,7 +304,8 @@ def coin_positions3(args, return_dict):
 	pocket1 = True
 	back_strike = False
 	pocket3_results = []
-	for i in xrange(194, 806, 100):
+	striker_pos = [194, 806, 294, 394, 494, 594, 694]
+	for i in striker_pos:
 		striker_ok = True	
 		striker_y = i
 		striker_point = (striker_x, striker_y)
@@ -414,7 +415,8 @@ def coin_positions1(args, return_dict):
 	strike_through_pocket = clean_strikes(positions, pocket1_point, positions, 50, False)
 	print 'clean1: ', strike_through_pocket, '\n'
 
-	for i in xrange(806, 194, -100):
+	striker_pos = [806, 194, 706, 606, 506, 406, 306]
+	for i in striker_pos:
 		striker_ok = True	
 		striker_y = i
 		striker_point = (striker_x, striker_y)
