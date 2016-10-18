@@ -237,7 +237,7 @@ def coin_positions(*args):
 				force = 2500
 			else:
 				coin_to_strike = positions[0]
-				force = 3000
+				force = 2000
 			coin_y = coin_to_strike['y']
 			coin_x = coin_to_strike['x']
 			coin = (coin_x, coin_y)
@@ -271,7 +271,7 @@ def coin_positions(*args):
 				line_coin_striker = Line(coin, striker_point)
 				slope_coin_striker = line_coin_striker.slope
 				angle = math.degrees(math.atan(slope_coin_striker))
-				force = 3000
+				force = 4000
 				position = striker_y
 			angle += 90
 
