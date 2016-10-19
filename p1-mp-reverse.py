@@ -266,13 +266,17 @@ def coin_positions(*args):
 				print 'Attempting straight shot on: ', coin_to_strike, '\n'
 				if coin_y > 500:
 					striker_y = striker_positions[len(striker_positions) - 1]
+					coin[1] -= 25
 				else:
 					striker_y = striker_positions[0]
+					coin[1] += 25
 				striker_point = (striker_x, striker_y)
 				line_coin_striker = Line(coin, striker_point)
 				slope_coin_striker = line_coin_striker.slope
 				angle = math.degrees(math.atan(slope_coin_striker))
 				force = 2500
+				if back_coins:
+					force = 900
 				position = striker_y
 			angle += 90
 
