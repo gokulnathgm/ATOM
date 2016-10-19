@@ -276,7 +276,7 @@ def coin_positions(*args):
 				angle = math.degrees(math.atan(slope_coin_striker))
 				force = 2500
 				if back_coins:
-					force = 900
+					force = 750
 				position = striker_y
 			angle += 90
 
