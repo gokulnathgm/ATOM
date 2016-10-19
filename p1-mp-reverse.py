@@ -137,8 +137,8 @@ def coin_positions(*args):
 	global set_strike_first
 	if first_strike:
 		first_strike = False
-		angle = 90
-		position = 500
+		angle = 125
+		position = 250
 		force = 4000
 	else:
 		q = mp.Queue()
@@ -285,7 +285,7 @@ def coin_positions(*args):
 def coin_positions4(args, return_dict):
 	pocket4_results = []
 	print 'coin positions'
-	print args, '\n'
+	#print args, '\n'
 	angle = 0
 
 	positions = args[0]['position']
@@ -378,15 +378,25 @@ def coin_positions4(args, return_dict):
 				slope = strike_line.slope
 				angle = math.degrees(math.atan(slope))
 				pocket2 = False
+				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
+				distance_coin_to_pocket = math.hypot(pocket4_x - coin_x, pocket4_y - coin_y)
+				total_distance = distance_striker_to_coin + distance_coin_to_pocket
 				print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
-				if angle_striker_coin_pocket >= 175:
-					force = 1000
-				elif angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
-						force = 1500
-				elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
+				print '\ntotal distance : ', total_distance, '\n'
+				if total_distance <= 1000 and angle_striker_coin_pocket >= 170:
+					force = total_distance *0.9
+				elif total_distance <= 1000 and angle_striker_coin_pocket < 170:
+					force = 1000	
+				elif total_distance > 1000 and angle_striker_coin_pocket >= 175:
+					force = 970
+				elif total_distance > 1000 and angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
+						force = 1100
+				elif total_distance > 1000 and angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
 					force = 2000
 				else:
 					force = 4000
+				if total_distance < 800 and distance_coin_to_pocket < 50:
+					force =	700
 
 				angle += 90
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
@@ -492,12 +502,20 @@ def coin_positions2(args, return_dict):
 				slope = strike_line.slope
 				angle = math.degrees(math.atan(slope))
 				back_strike = False
+				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
+				distance_coin_to_pocket = math.hypot(pocket2_x - coin_x, pocket2_y - coin_y)
+				total_distance = distance_striker_to_coin + distance_coin_to_pocket
 				print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
-				if angle_striker_coin_pocket >= 175:
+				print '\ntotal distance : ', total_distance, '\n'
+				if total_distance <= 1000 and angle_striker_coin_pocket >= 170:
+					force = total_distance
+				elif total_distance <= 1000 and angle_striker_coin_pocket < 170:
+					force = 1000	
+				elif total_distance > 1000 and angle_striker_coin_pocket >= 175:
 					force = 970
-				elif angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
-					force = 1500
-				elif angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
+				elif total_distance > 1000 and angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
+						force = 1100
+				elif total_distance > 1000 and angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
 					force = 2000
 				else:
 					force = 4000
