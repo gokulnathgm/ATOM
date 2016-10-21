@@ -7,6 +7,7 @@ from socketIO_client import BaseNamespace
 import threading as th
 import multiprocessing as mp
 from multiprocessing import Manager
+import sys, select
 
 socketIO = SocketIO('10.7.90.8', 4000)
 print socketIO.connected
@@ -128,7 +129,7 @@ def coin_positions(*args):
 		print coin
 
 	print '\n------------MANUAL?????------------\n'
-	inp, o, e = select.select( [sys.stdin], [], [], 8)
+	inp, o, e = select.select( [sys.stdin], [], [], 3)
 	if inp:
 		print "\nEntered manual mode: \n", sys.stdin.readline().strip()
 		print "Coin...................? "
@@ -176,12 +177,12 @@ def coin_positions(*args):
 		coin_x = coin_to_strike['x']
 		coin_y = coin_to_strike['y']
 
-		if coin_x > 184:
+		if coin_x < 184:
 			if coin_y > 500:
 				midpoint = (striker_y + coin_y - 25) / 2
 			else:
 				midpoint = (striker_y + coin_y + 25) / 2
-			point_midpoint = (0, midpoint)
+			point_midpoint = (1000, midpoint)
 			strike_line = Line(point_midpoint, striker_point)
 			slope = strike_line.slope
 			angle = math.degrees(math.atan(slope))

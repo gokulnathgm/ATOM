@@ -126,7 +126,7 @@ def coin_positions(*args):
 		print coin
 
 	print '\n------------MANUAL?????------------\n'
-	inp, o, e = select.select( [sys.stdin], [], [], 8)
+	inp, o, e = select.select( [sys.stdin], [], [], 3)
 	if inp:
 		print "\nEntered manual mode: \n", sys.stdin.readline().strip()
 		print "Coin...................? "
