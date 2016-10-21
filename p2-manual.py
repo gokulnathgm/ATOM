@@ -123,7 +123,7 @@ def coin_positions(*args):
 	positions.extend(black_coins)
 
 	for coin in positions:
-		print coin['x'], coin['y'], coin['id']
+		print coin['x'], '\t', coin['y'], '\t', coin['id']
 
 	print '\n------------MANUAL?????------------\n'
 	inp, o, e = select.select( [sys.stdin], [], [], 3)
