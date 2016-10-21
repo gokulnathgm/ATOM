@@ -126,11 +126,12 @@ def coin_positions(*args):
 	positions.extend(black_coins)
 
 	for coin in positions:
-		print coin
+		print coin['x'], coin['y'], coin['id']
 
 	print '\n------------MANUAL?????------------\n'
 	inp, o, e = select.select( [sys.stdin], [], [], 3)
 	if inp:
+		coin_to_strike = positions[0]
 		print "\nEntered manual mode: \n", sys.stdin.readline().strip()
 		print "Coin...................? "
 		coin = raw_input()
@@ -140,6 +141,10 @@ def coin_positions(*args):
 		half = input()
 		print "Force...................? "
 		force = input()
+		print "Reverse...................? "
+		reverse = raw_input()
+		print "Position...................? "
+		pos = raw_input()
 		
 		striker_positions = []
 		for i in range(194,806,10):
@@ -155,8 +160,14 @@ def coin_positions(*args):
 
 		if half == 0:
 			position = striker_positions[0]
-		else:
+		elif half == 2:
 			position = striker_positions[len(striker_positions) - 1]
+		else:
+			position = striker_positions[len(striker_positions) / 2]
+
+		if pos != '':
+			position = int(pos)
+
 		striker_y = position
 		striker_point = (striker_x, striker_y)
 
@@ -177,7 +188,7 @@ def coin_positions(*args):
 		coin_x = coin_to_strike['x']
 		coin_y = coin_to_strike['y']
 
-		if coin_x < 184:
+		if coin_x < 184 or reverse == "1":
 			if coin_y > 500:
 				midpoint = (striker_y + coin_y - 25) / 2
 			else:
@@ -255,9 +266,6 @@ def coin_positions(*args):
 			red = sorted(red, key=lambda k: k['angle'], reverse=True) 
 			white = sorted(white, key=lambda k: k['angle'], reverse=True) 
 			black = sorted(black, key=lambda k: k['angle'], reverse=True) 
-			print red
-			print white
-			print black
 
 			if red:
 				angle = red[0]['angle']
@@ -362,7 +370,6 @@ def coin_positions4(args, return_dict):
 	pocket4_results = []
 	positions = args
 	number_of_coins = len(positions)
-	print 'Number of coins = ', number_of_coins, '\n'
 	black = []
 	white = []
 	red = []
@@ -428,7 +435,6 @@ def coin_positions4(args, return_dict):
 				#coin = strike_through_striker[len(strike_through_striker)-1]
 				coin_x = coin['x']
 				coin_y = coin['y']
-				print coin
 				# if coin_y < 194 + 50 or coin_x < 153 + 50:
 				# 	continue
 				coin_pocket = ((coin_x, coin_y), (1000, 1000))
@@ -438,7 +444,6 @@ def coin_positions4(args, return_dict):
 					#print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
 					continue
 				coin_point = (coin_x, coin_y)
-				print coin_point
 				circle = Circle(coin_point, 55)
 				line_coin_pocket = Line(coin_point, pocket4_point)
 				intersection_points = circle.intersection(line_coin_pocket)
@@ -452,8 +457,6 @@ def coin_positions4(args, return_dict):
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket4_x - coin_x, pocket4_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
-				print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
-				print '\ntotal distance : ', total_distance, '\n'
 				if total_distance <= 1000 and angle_striker_coin_pocket >= 170:
 					force = total_distance *0.9
 				elif total_distance <= 1000 and angle_striker_coin_pocket < 170:
@@ -548,7 +551,6 @@ def coin_positions2(args, return_dict):
 				#coin = strike_through_striker[len(strike_through_striker)-1]
 				coin_x = coin['x']
 				coin_y = coin['y']
-				print coin
 				# if coin_y > 806 - 50 or coin_x < 153 + 50:
 				# 	continue
 				coin_pocket = ((coin_x, coin_y), (1000, 0))
@@ -558,7 +560,6 @@ def coin_positions2(args, return_dict):
 					#print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
 					continue
 				coin_point = (coin_x, coin_y)
-				print coin_point
 				circle = Circle(coin_point, 55)
 				line_coin_pocket = Line(coin_point, pocket2_point)
 				intersection_points = circle.intersection(line_coin_pocket)
@@ -572,8 +573,6 @@ def coin_positions2(args, return_dict):
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket2_x - coin_x, pocket2_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
-				print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
-				print '\ntotal distance : ', total_distance, '\n'
 				if total_distance <= 1000 and angle_striker_coin_pocket >= 170:
 					force = total_distance *0.9
 				elif total_distance <= 1000 and angle_striker_coin_pocket < 170:
