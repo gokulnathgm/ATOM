@@ -8,6 +8,7 @@ import threading as th
 import multiprocessing as mp
 from multiprocessing import Manager
 import sys, select
+from matplotlib import pyplot
 
 socketIO = SocketIO('10.7.90.8', 4000)
 print socketIO.connected
@@ -131,6 +132,41 @@ def coin_positions(*args):
 	print '\n------------MANUAL?????------------\n'
 	inp, o, e = select.select( [sys.stdin], [], [], 3)
 	if inp:
+		white_x = []
+		white_y = []
+		black_x = []
+		black_y = []
+		for coin in white_coins:
+			white_x.append(coin['x'])
+			white_y.append(coin['y'])
+			pyplot.annotate(coin['id'], xy = (coin['x'], coin['y']))
+		for coin in black_coins:
+			black_x.append(coin['x'])
+			black_y.append(coin['y'])
+			pyplot.annotate(coin['id'], xy = (coin['x'], coin['y']))
+
+		pyplot.axis([0,1000,0,1000])
+		pyplot.plot(white_x, white_y, 'wo')
+		pyplot.plot(black_x, black_y, 'ko')
+
+		X = 153.2258
+		Ys = [193.5484, 300, 400, 500, 600, 700, 806.4516]
+
+		for i in range(7):
+			pyplot.annotate(str(Ys[i]), xy = (X, Ys[i]))
+
+		Xs = [153.2258] * 7
+		pyplot.plot(Xs, Ys, 'bv')
+
+		X = 846.7742
+		for i in range(7):
+			pyplot.annotate(str(Ys[i]), xy = (X, Ys[i]))
+
+		Xs = [846.7742] * 7
+		pyplot.plot(Xs, Ys, 'bv')
+
+		pyplot.show()
+
 		coin_to_strike = positions[0]
 		print "\nEntered manual mode: \n", sys.stdin.readline().strip()
 		print "Coin...................? "
@@ -145,6 +181,8 @@ def coin_positions(*args):
 		reverse = raw_input()
 		print "Position...................? "
 		pos = raw_input()
+		print "Angle...................?"
+		ang = raw_input()
 		
 		striker_positions = []
 		for i in range(194,806,10):
@@ -211,6 +249,9 @@ def coin_positions(*args):
 			slope = strike_line.slope
 			angle = math.degrees(math.atan(slope))
 			angle += 90
+
+		if ang != '':
+			angle = int(ang)
 
 	else:
 		manager = Manager()
