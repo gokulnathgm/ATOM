@@ -1,10 +1,7 @@
 from socketIO_client import SocketIO
 from sympy.geometry import *
 from sympy import sympify
-import random
 import math
-from socketIO_client import BaseNamespace
-import threading as th
 import multiprocessing as mp
 from multiprocessing import Manager
 import sys, select
@@ -127,7 +124,7 @@ def coin_positions(*args):
 		print coin['x'], '\t', coin['y'], '\t', coin['id']
 
 	print '\n------------MANUAL?????------------\n'
-	inp, o, e = select.select( [sys.stdin], [], [], 3)
+	inp, o, e = select.select( [sys.stdin], [], [], 0)
 	if inp:
 		white_x = []
 		white_y = []
@@ -178,7 +175,7 @@ def coin_positions(*args):
 		reverse = raw_input()
 		print "Position...................? "
 		pos = raw_input()
-		print "Angle...................?"
+		print "Angle...................? "
 		ang = raw_input()
 
 		striker_positions = []
@@ -275,28 +272,16 @@ def coin_positions(*args):
 		for coin in result:
 			if coin['type'] == 'black':
 				black.append(coin)
-				if coin['angle_mutual'] > large:
-					large = coin['angle_mutual']
-					angle = coin['angle']
-					position = coin['position']
-					force = coin['force']
+		
 			if coin['type'] == 'white':
 				white.append(coin)
-				if coin['angle_mutual'] > large:
-					large = coin['angle_mutual']
-					angle = coin['angle']
-					position = coin['position']
-					force = coin['force']
+		
 			if coin['type'] == 'red':
 				red.append(coin)
-				if coin['angle_mutual'] > large:
-					large, angle = coin['angle_mutual'], coin['angle_mutual']
-					position = coin['position']
-					force = coin['force']
 
-		red = sorted(red, key=lambda k: k['angle'], reverse=True) 
-		white = sorted(white, key=lambda k: k['angle'], reverse=True) 
-		black = sorted(black, key=lambda k: k['angle'], reverse=True) 
+		red = sorted(red, key=lambda k: k['angle_mutual'], reverse=True) 
+		white = sorted(white, key=lambda k: k['angle_mutual'], reverse=True) 
+		black = sorted(black, key=lambda k: k['angle_mutual'], reverse=True) 
 
 		if red:
 			angle = red[0]['angle']
@@ -388,37 +373,18 @@ def coin_positions(*args):
 			angle += 90
 
 	print {'position': position, 'force': force, 'angle': angle}, '\n'
-	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
+	socketIO.emit('player_input', {'position': position, 'force': 8000, 'angle': angle})
 
 
 
 def coin_positions3(args, return_dict):
+	print 'Aiming for pocket3...' ,'\n'
 	pocket3_results = []
 	positions = args
-	number_of_coins = len(positions)
-
-	black = []
-	white = []
-	red = []
-	for coin in positions:
-		if coin['type'] == 'black':
-			black.append(coin)
-		if coin['type'] == 'white':
-			white.append(coin)
-		if coin['type'] == 'red':
-			red.append(coin)
-	positions = []
-	positions.extend(red)
-	positions.extend(white)
-	positions.extend(black)
 	
 	strike_through_pocket = clean_strikes(positions, pocket3_point, positions, 50, False)
 	print 'clean1: ', strike_through_pocket, '\n'
 
-	no_strike = False
-	pocket1 = True
-	back_strike = False
-	pocket3_results = []
 	striker_pos = [194, 806, 294, 394, 494, 594, 694]
 	for i in striker_pos:
 		striker_ok = True	
@@ -434,8 +400,6 @@ def coin_positions3(args, return_dict):
 				striker_ok = False
 				break
 		if not striker_ok:
-			if i == 794:
-				no_strike = True
 			continue
 
 		strike_through_pocket_modified = []
@@ -459,17 +423,12 @@ def coin_positions3(args, return_dict):
 		striked = False
 		if strike_through_striker:
 			for coin in strike_through_striker:
-				#coin = strike_through_striker[len(strike_through_striker)-1]
 				coin_x = coin['x']
 				coin_y = coin['y']
-				#print coin
-				# if coin_y < 194 + 50 or coin_x < 153 + 50:
-				# 	continue
 				coin_pocket = ((coin_x, coin_y), (0, 1000))
 				coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 				angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 				if angle_striker_coin_pocket < 140:
-					#print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
 					continue
 				coin_point = (coin_x, coin_y)
 				circle = Circle(coin_point, 55)
@@ -481,7 +440,6 @@ def coin_positions3(args, return_dict):
 				strike_line = Line(point, striker_point)
 				slope = strike_line.slope
 				angle = math.degrees(math.atan(slope))
-				pocket1 = False
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket3_x - coin_x, pocket3_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
@@ -504,33 +462,18 @@ def coin_positions3(args, return_dict):
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket3_results.append(strike)
 				striked = True
-				break
-			if striked:
-				break
+				#break
+			#if striked:
+				#break
 
 	return_dict['pocket3'] = pocket3_results
 
 
 def coin_positions1(args, return_dict):
 	pocket1_results = []
-	print '.........................Aiming for pocket1.........................' ,'\n'
+	print 'Aiming for pocket1...' ,'\n'
 	positions = args
-	number_of_coins = len(positions)
 
-	black = []
-	white = []
-	red = []
-	for coin in positions:
-		if coin['type'] == 'black':
-			black.append(coin)
-		if coin['type'] == 'white':
-			white.append(coin)
-		if coin['type'] == 'red':
-			red.append(coin)
-	positions = []
-	positions.extend(red)
-	positions.extend(white)
-	positions.extend(black)
 	no_strike = False
 	strike_through_pocket = clean_strikes(positions, pocket1_point, positions, 50, False)
 	print 'clean1: ', strike_through_pocket, '\n'
@@ -550,9 +493,6 @@ def coin_positions1(args, return_dict):
 				striker_ok = False
 				break
 		if not striker_ok:
-			if i == 206:
-				no_strike = True
-			back_strike = True
 			continue
 
 		strike_through_pocket_modified = []
@@ -577,16 +517,12 @@ def coin_positions1(args, return_dict):
 		back_strike = True
 		if strike_through_striker:
 			for coin in strike_through_striker:
-				#coin = strike_through_striker[len(strike_through_striker)-1]
 				coin_x = coin['x']
 				coin_y = coin['y']
-				# if coin_y > 806 - 50 or coin_x < 153 + 50:
-				# 	continue
 				coin_pocket = ((coin_x, coin_y), (0, 0))
 				coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 				angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 				if angle_striker_coin_pocket < 140:
-					#print 'Angle b/w striker coin & pocket: ', angle_striker_coin_pocket, '\n'
 					continue
 				coin_point = (coin_x, coin_y)
 				circle = Circle(coin_point, 55)
@@ -598,7 +534,6 @@ def coin_positions1(args, return_dict):
 				strike_line = Line(point, striker_point)
 				slope = strike_line.slope
 				angle = math.degrees(math.atan(slope))
-				back_strike = False
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket1_x - coin_x, pocket1_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
@@ -620,9 +555,9 @@ def coin_positions1(args, return_dict):
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket1_results.append(strike)
 				striked = True
-				break
-			if striked:
-				break
+				#break
+			#if striked:
+				#break
 	return_dict['pocket1'] = pocket1_results
 
 socketIO.on('player_input', emit_response)

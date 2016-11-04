@@ -7,6 +7,7 @@ from socketIO_client import BaseNamespace
 import threading as th
 import multiprocessing as mp
 from multiprocessing import Manager
+import time
 
 socketIO = SocketIO('10.7.90.8', 4000)
 print socketIO.connected
@@ -104,6 +105,7 @@ def connection_response(*args):
 	print args, '\n'
 
 def coin_positions(*args):
+	start_time = time.time()
 	positions = args[0]['position']
 	positions = args[0]['position']
 	number_of_coins = len(positions)
@@ -279,6 +281,7 @@ def coin_positions(*args):
 
 
 	print {'position': position, 'force': force, 'angle': angle}, '\n'
+	print "--- %s seconds ---" % (time.time() - start_time)
 	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
 
 
@@ -397,10 +400,10 @@ def coin_positions4(args, return_dict):
 				angle += 90
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket4_results.append(strike)
-				striked = True
-				break
-			if striked:
-				break
+				#striked = True
+				#break
+			#if striked:
+				#break
 
 	return_dict['pocket4'] = pocket4_results
 
@@ -517,10 +520,10 @@ def coin_positions2(args, return_dict):
 				angle += 90
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket2_results.append(strike)
-				striked = True
-				break
-			if striked:
-				break
+				#striked = True
+				#break
+			#if striked:
+				#break
 	return_dict['pocket2'] = pocket2_results
 
 socketIO.on('player_input', emit_response)
