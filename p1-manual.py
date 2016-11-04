@@ -87,7 +87,7 @@ def clean_strikes(coins, destination_point, positions, radius_total, check):
 					break
 		if path:
 			if check:
-				coin = {'x': coin['x1'], 'y': coin['y1'], 'type': coin['type']}
+				coin = {'x': coin['x1'], 'y': coin['y1'], 'type': coin['type'], 'id': coin['id']}
 				strike_through.append(coin)
 			else:
 				strike_through.append(coin)
@@ -399,6 +399,17 @@ def coin_positions4(args, return_dict):
 	strike_through_pocket = clean_strikes(positions, pocket4_point, positions, 50, False)
 	print 'clean1: ', strike_through_pocket, '\n'
 
+	new_positions = []
+	ids = []
+
+	for coin in strike_through_pocket:
+		ids.append(coin['id'])
+
+	for coin in positions:
+		if coin['id'] in ids:
+			continue
+		new_positions.append(coin)
+
 	pocket4_results = []
 	striker_pos = [194, 806, 294, 394, 494, 594, 694]
 	for i in striker_pos:
@@ -429,10 +440,10 @@ def coin_positions4(args, return_dict):
 			intersection_points = circle.intersection(line_coin_pocket)
 			intersection_point_x = float(intersection_points[0][0])
 			intersection_point_y = float(intersection_points[0][1])
-			point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin['type']}
+			point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin['type'], 'id': coin['id']}
 			strike_through_pocket_modified.append(point)
 
-		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
+		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, new_positions, 55, True)
 		print 'clean2: ', strike_through_striker, '\n'
 
 		striked = False
@@ -491,6 +502,17 @@ def coin_positions2(args, return_dict):
 	strike_through_pocket = clean_strikes(positions, pocket2_point, positions, 50, False)
 	print 'clean1: ', strike_through_pocket, '\n'
 
+	new_positions = []
+	ids = []
+
+	for coin in strike_through_pocket:
+		ids.append(coin['id'])
+
+	for coin in positions:
+		if coin['id'] in ids:
+			continue
+		new_positions.append(coin)
+
 	striker_pos = [806, 194, 706, 606, 506, 406, 306]
 	for i in striker_pos:
 		striker_ok = True	
@@ -520,10 +542,10 @@ def coin_positions2(args, return_dict):
 			intersection_points = circle.intersection(line_coin_pocket)
 			intersection_point_x = float(intersection_points[0][0])
 			intersection_point_y = float(intersection_points[0][1])
-			point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin['type']}
+			point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin['type'], 'id': coin['id']}
 			strike_through_pocket_modified.append(point)
 
-		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, True)
+		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, new_positions, 55, True)
 		print 'clean2: ', strike_through_striker, '\n'
 
 		striked = False
