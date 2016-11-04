@@ -462,9 +462,6 @@ def coin_positions3(args, return_dict):
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket3_results.append(strike)
 				striked = True
-				#break
-			#if striked:
-				#break
 
 	return_dict['pocket3'] = pocket3_results
 
@@ -555,9 +552,7 @@ def coin_positions1(args, return_dict):
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket1_results.append(strike)
 				striked = True
-				#break
-			#if striked:
-				#break
+
 	return_dict['pocket1'] = pocket1_results
 
 socketIO.on('player_input', emit_response)
