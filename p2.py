@@ -4,7 +4,6 @@ from sympy import sympify
 import random
 
 socketIO = SocketIO('10.7.90.8', 4000)
-#socketIO = SocketIO('localhost', 4000)
 print socketIO.connected
 
 player1Key = 'T8uhv56xvs'
@@ -29,7 +28,7 @@ def coin_positions(*args):
 
 	position = random.randint(200, 800)
 	angle = random.randint(0, 180)	
-	socketIO.emit('player_input', {'position': position, 'force': 1, 'angle': angle})
+	socketIO.emit('player_input', {'position': position, 'force': 10000, 'angle': angle})
 	socketIO.on('player_input', emit_response)
 
 socketIO.emit('connect_game', {'playerKey': player2Key, 'gameKey': gameKey})
