@@ -8,11 +8,16 @@ import sys, select
 from matplotlib import pyplot
 
 socketIO = SocketIO('10.7.90.8', 4000)
+# socketIO = SocketIO('localhost', 4000)
 print socketIO.connected
 
 player1Key = 'T8uhv56xvs'
 player2Key = 'GSwwserRd2'
 gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+
+# player1Key = 'p11'
+# player2Key = 'p12'
+# gameKey = '1'
 
 first_strike = True
 set_strike_first = False
@@ -248,6 +253,7 @@ def coin_positions(*args):
 		return_dict = manager.dict()
 		global first_strike
 		global set_strike_first
+		# first_strike = False
 		if first_strike:
 			first_strike = False
 			angle = 90
@@ -497,9 +503,9 @@ def coin_positions4(args, return_dict):
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket4_results.append(strike)
 				striked = True
-				#break
-			#if striked:
-				#break
+				break
+			if striked:
+				break
 	return_dict['pocket4'] = pocket4_results
 
 def coin_positions2(args, return_dict):
@@ -602,9 +608,9 @@ def coin_positions2(args, return_dict):
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket2_results.append(strike)
 				striked = True
-				#break
-			#if striked:
-				#break
+				break
+			if striked:
+				break
 	return_dict['pocket2'] = pocket2_results
 
 def coin_positions3(args, return_dict):
@@ -703,13 +709,16 @@ def coin_positions3(args, return_dict):
 					# if total_distance < 800 and distance_coin_to_pocket < 50:
 					# 	force =	700
 					force = 10000
-					angle += 270
+					if coin_x < striker_x:
+						angle += 270
+					else:
+						angle += 90
 					strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 					pocket3_results.append(strike)
 					striked = True
-					#break
-				#if striked:
-					#break
+					break
+				if striked:
+					break
 	return_dict['pocket3'] = pocket3_results	
 
 def coin_positions1(args, return_dict):
@@ -811,20 +820,22 @@ def coin_positions1(args, return_dict):
 					# if total_distance < 800 and distance_coin_to_pocket < 50:
 					# 	force =	700
 					force = 10000
-					angle += 270
+					if coin_x < striker_x:
+						angle += 270
+					else:
+						angle += 90
 					strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 					pocket1_results.append(strike)
 					striked = True
-					#break
-				#if striked:
-					#break
-	return_dict['pocket1'] = pocket1_results	
+					break
+				if striked:
+					break
+	return_dict['pocket1'] = pocket1_results
+
+
 
 socketIO.on('player_input', emit_response)
 socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
-socketIO.on('connect_game', connection_response)
-socketIO.on('your_turn', coin_positions)
-socketIO.wait()etIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
 socketIO.on('connect_game', connection_response)
 socketIO.on('your_turn', coin_positions)
 socketIO.wait()
