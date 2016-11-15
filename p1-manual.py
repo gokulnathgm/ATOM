@@ -123,278 +123,153 @@ def coin_positions(*args):
 	for coin in positions:
 		print coin['x'], '\t', coin['y'], '\t',  coin['id']
 
-	print '\n------------MANUAL?????------------\n'
-	inp, o, e = select.select( [sys.stdin], [], [], 0)
-	if inp:
-		white_x = []
-		white_y = []
-		black_x = []
-		black_y = []
-		# for coin in white_coins:
-		# 	white_x.append(coin['x'])
-		# 	white_y.append(coin['y'])
-		# 	pyplot.annotate(coin['id'], xy = (coin['x'], coin['y']))
-		# for coin in black_coins:
-		# 	black_x.append(coin['x'])
-		# 	black_y.append(coin['y'])
-		# 	pyplot.annotate(coin['id'], xy = (coin['x'], coin['y']))
-
-		# pyplot.axis([0,1000,0,1000])
-		# pyplot.plot(white_x, white_y, 'wo')
-		# pyplot.plot(black_x, black_y, 'ko')
-
-		# X = 153.2258
-		# Ys = [193.5484, 300, 400, 500, 600, 700, 806.4516]
-
-		# for i in range(7):
-		# 	pyplot.annotate(str(Ys[i]), xy = (X, Ys[i]))
-
-		# Xs = [153.2258] * 7
-		# pyplot.plot(Xs, Ys, 'bv')
-
-		# X = 846.7742
-		# for i in range(7):
-		# 	pyplot.annotate(str(Ys[i]), xy = (X, Ys[i]))
-
-		# Xs = [846.7742] * 7
-		# pyplot.plot(Xs, Ys, 'bv')
-
-		# pyplot.show()
-
-		# coin_to_strike = positions[0]
-		# print "\nEntered manual mode: \n", sys.stdin.readline().strip()
-		# print "Coin...................? "
-		# coin = raw_input()
-		# print "Pocket...................? "
-		# pocket = input()
-		# print "Half...................? "
-		# half = input()
-		# print "Force...................? "
-		# force = input()
-		# print "Reverse...................? "
-		# reverse = raw_input()
-		# print "Position...................? "
-		# pos = raw_input()
-		# print "Angle...................? "
-		# ang = raw_input()
-		
-		# striker_positions = []
-		# for i in range(194,806,10):
-		# 	valid_position = True
-		# 	for j in positions:
-		# 		j_x = j['x']
-		# 		j_y = j['y']
-		# 		if (j_x > 792 and j_x < 902) and (j_y > i - 55 and j_y < i + 55):
-		# 			valid_position = False
-		# 			break
-		# 	if valid_position:
-		# 		striker_positions.append(i)
-
-		# if half == 0:
-		# 	position = striker_positions[0]
-		# elif half == 2:
-		# 	position = striker_positions[len(striker_positions) - 1]
-		# else:
-		# 	position = striker_positions[len(striker_positions) / 2]
-
-		# if pos != '':
-		# 	position = int(pos)
-
-		# striker_y = position
-		# striker_point = (striker_x, striker_y)
-
-		# for i in positions:
-		# 	if i['id'] == coin:
-		# 		coin_to_strike = i
-		# 		break
-
-		# if pocket == 1:
-		# 	pocket_point = (pocket1_x, pocket1_y)
-		# elif pocket == 2:
-		# 	pocket_point = (pocket2_x, pocket2_y)
-		# elif pocket == 3:
-		# 	pocket_point = (pocket3_x, pocket3_y)
-		# else:
-		# 	pocket_point = (pocket4_x, pocket4_y)
-
-		# coin_x = coin_to_strike['x']
-		# coin_y = coin_to_strike['y']
-
-		# if coin_x < 184 or reverse == "1":
-		# 	if coin_y > 500:
-		# 		midpoint = (striker_y + coin_y - 25) / 2
-		# 	else:
-		# 		midpoint = (striker_y + coin_y + 25) / 2
-		# 	point_midpoint = (1000, midpoint)
-		# 	strike_line = Line(point_midpoint, striker_point)
-		# 	slope = strike_line.slope
-		# 	angle = math.degrees(math.atan(slope))
-		# 	angle += 90
-
-		# else:
-		# 	coin_point = (coin_x, coin_y)
-		# 	circle = Circle(coin_point, 55)
-		# 	line_coin_pocket = Line(coin_point, pocket_point)
-		# 	intersection_points = circle.intersection(line_coin_pocket)
-		# 	intersection_point_x = float(intersection_points[0][0])
-		# 	intersection_point_y = float(intersection_points[0][1])
-		# 	point = (intersection_point_x, intersection_point_y)
-		# 	strike_line = Line(point, striker_point)
-		# 	slope = strike_line.slope
-		# 	angle = math.degrees(math.atan(slope))
-		# 	angle += 90
-
-		# if ang != '':
-		# 	angle = int(ang)
-
+	manager = Manager()
+	return_dict = manager.dict()
+	global first_strike
+	global set_strike_first
+	# first_strike = False
+	if first_strike:
+		first_strike = False
+		angle = 90
+		position = 500
+		force = 10000
 	else:
-		manager = Manager()
-		return_dict = manager.dict()
-		global first_strike
-		global set_strike_first
-		# first_strike = False
-		if first_strike:
-			first_strike = False
-			angle = 90
-			position = 500
-			force = 10000
-		else:
-			q = mp.Queue()
-			job1 = mp.Process(target=coin_positions4, args=(positions, return_dict))
-			job2 = mp.Process(target=coin_positions2, args=(positions, return_dict))
-			job3 = mp.Process(target=coin_positions3, args=(positions, return_dict))
-			job4 = mp.Process(target=coin_positions1, args=(positions, return_dict))
-			job1.start()
-			job2.start()
-			job3.start()
-			job4.start()
-			job1.join()
-			job2.join()
-			job3.join()
-			job4.join()
+		q = mp.Queue()
+		job1 = mp.Process(target=coin_positions4, args=(positions, return_dict))
+		job2 = mp.Process(target=coin_positions2, args=(positions, return_dict))
+		job3 = mp.Process(target=coin_positions3, args=(positions, return_dict))
+		job4 = mp.Process(target=coin_positions1, args=(positions, return_dict))
+		job1.start()
+		job2.start()
+		job3.start()
+		job4.start()
+		job1.join()
+		job2.join()
+		job3.join()
+		job4.join()
 
-			print 'results4', return_dict['pocket4'], '\n' 
-			print 'results2', return_dict['pocket2'], '\n'
-			print 'results3', return_dict['pocket3'], '\n'
-			print 'results1', return_dict['pocket1'], '\n'
+		print 'results4', return_dict['pocket4'], '\n' 
+		print 'results2', return_dict['pocket2'], '\n'
+		print 'results3', return_dict['pocket3'], '\n'
+		print 'results1', return_dict['pocket1'], '\n'
 
-			result = return_dict['pocket4']
-			result.extend(return_dict['pocket2'])
-			result.extend(return_dict['pocket3'])
-			result.extend(return_dict['pocket1'])
+		result = return_dict['pocket4']
+		result.extend(return_dict['pocket2'])
+		result.extend(return_dict['pocket3'])
+		result.extend(return_dict['pocket1'])
 
-			black = []
-			white = []
-			red = []
-			for coin in result:
-				if coin['type'] == 'black':
-					black.append(coin)
-		
-				if coin['type'] == 'white':
-					white.append(coin)
-				
-				if coin['type'] == 'red':
-					red.append(coin)
+		black = []
+		white = []
+		red = []
+		for coin in result:
+			if coin['type'] == 'black':
+				black.append(coin)
+	
+			if coin['type'] == 'white':
+				white.append(coin)
+			
+			if coin['type'] == 'red':
+				red.append(coin)
 
-			red = sorted(red, key=lambda k: k['angle_mutual'], reverse=True) 
-			white = sorted(white, key=lambda k: k['angle_mutual'], reverse=True) 
-			black = sorted(black, key=lambda k: k['angle_mutual'], reverse=True) 
+		red = sorted(red, key=lambda k: k['angle_mutual'], reverse=True) 
+		white = sorted(white, key=lambda k: k['angle_mutual'], reverse=True) 
+		black = sorted(black, key=lambda k: k['angle_mutual'], reverse=True) 
 
-			if red:
-				angle = red[0]['angle']
-				force = red[0]['force']
-				position = red[0]['position']
-				print red[0]
-			elif white:
-				angle = white[0]['angle']
-				force = white[0]['force']
-				position = white[0]['position']
-				print white[0]
+		if red:
+			angle = red[0]['angle']
+			force = red[0]['force']
+			position = red[0]['position']
+			print red[0]
+		elif white:
+			angle = white[0]['angle']
+			force = white[0]['force']
+			position = white[0]['position']
+			print white[0]
 
-			elif black:
-				angle = black[0]['angle']
-				force = black[0]['force']
-				position = black[0]['position']
-				print black[0]
+		elif black:
+			angle = black[0]['angle']
+			force = black[0]['force']
+			position = black[0]['position']
+			print black[0]
 
-			if not result:
-				back_coins = []
-				for coin in red_coin:
+		if not result:
+			back_coins = []
+			for coin in red_coin:
+				y = coin['y']
+				if y > 807 or y < 193:
+					back_coins.append(coin)
+			if not back_coins:
+				for coin in white_coins:
 					y = coin['y']
 					if y > 807 or y < 193:
 						back_coins.append(coin)
-				if not back_coins:
-					for coin in white_coins:
-						y = coin['y']
-						if y > 807 or y < 193:
-							back_coins.append(coin)
-				if not back_coins:
-					for coin in black_coins:
-						y = coin['y']
-						if y > 807 or y < 193:
-							back_coins.append(coin)
+			if not back_coins:
+				for coin in black_coins:
+					y = coin['y']
+					if y > 807 or y < 193:
+						back_coins.append(coin)
 
-				print '\nlooking for a reverse/straight shot\n'
-				print '\nback coins: \n', back_coins, '\n'
-				striker_positions = []
-				for i in range(194,806,10):
-					valid_position = True
-					for j in positions:
-						j_x = j['x']
-						j_y = j['y']
-						if (j_x > 99 and j_x < 209) and (j_y > i - 55 and j_y < i + 55):
-							valid_position = False
-							break
-					if valid_position:
-						striker_positions.append(i)
-				print 'valid positions: \n', striker_positions, '\n'
+			print '\nlooking for a reverse/straight shot\n'
+			print '\nback coins: \n', back_coins, '\n'
+			striker_positions = []
+			for i in range(194,806,10):
+				valid_position = True
+				for j in positions:
+					j_x = j['x']
+					j_y = j['y']
+					if (j_x > 99 and j_x < 209) and (j_y > i - 55 and j_y < i + 55):
+						valid_position = False
+						break
+				if valid_position:
+					striker_positions.append(i)
+			print 'valid positions: \n', striker_positions, '\n'
+			if back_coins:
+				coin_to_strike = back_coins[0]
+				#force = 2500
+			else:
+				coin_to_strike = positions[0]
+				#force = 2000
+			coin_y = coin_to_strike['y']
+			coin_x = coin_to_strike['x']
+			coin = (coin_x, coin_y)
+			if coin_to_strike['x'] < 203:
+				print 'Attempting reverse shot on: ', coin_to_strike, '\n'
+				if coin_y > 500:
+					striker_y = striker_positions[len(striker_positions) - 1]
+					mid_point = (striker_y + coin_y - 25) / 2
+					#mid_point -= 25
+				else:
+					striker_y = striker_positions[0]
+					mid_point = (striker_y + coin_y + 25) / 2
+					#mid_point += 25
+
+				striker_point = (striker_x, striker_y)
+				mid_point = (striker_y + coin_y) / 2
+				point_mid_point = (1000, mid_point)
+				line_coin_mid_point = Line(striker_point, point_mid_point)
+				slope_coin_mid_point = line_coin_mid_point.slope
+				angle = math.degrees(math.atan(slope_coin_mid_point))
+				#angle += 2
+				force = 10000
+				position = striker_y
+			else:
+				print 'Attempting straight shot on: ', coin_to_strike, '\n'
+				if coin_y > 500:
+					striker_y = striker_positions[len(striker_positions) - 1]
+					coin = (coin_x, coin_y - 25)
+				else:
+					striker_y = striker_positions[0]
+					coin = (coin_x, coin_y + 25)
+
+				striker_point = (striker_x, striker_y)
+				line_coin_striker = Line(coin, striker_point)
+				slope_coin_striker = line_coin_striker.slope
+				angle = math.degrees(math.atan(slope_coin_striker))
+				force = 8000
 				if back_coins:
-					coin_to_strike = back_coins[0]
-					#force = 2500
-				else:
-					coin_to_strike = positions[0]
-					#force = 2000
-				coin_y = coin_to_strike['y']
-				coin_x = coin_to_strike['x']
-				coin = (coin_x, coin_y)
-				if coin_to_strike['x'] < 203:
-					print 'Attempting reverse shot on: ', coin_to_strike, '\n'
-					if coin_y > 500:
-						striker_y = striker_positions[len(striker_positions) - 1]
-						mid_point = (striker_y + coin_y - 25) / 2
-						#mid_point -= 25
-					else:
-						striker_y = striker_positions[0]
-						mid_point = (striker_y + coin_y + 25) / 2
-						#mid_point += 25
-
-					striker_point = (striker_x, striker_y)
-					mid_point = (striker_y + coin_y) / 2
-					point_mid_point = (1000, mid_point)
-					line_coin_mid_point = Line(striker_point, point_mid_point)
-					slope_coin_mid_point = line_coin_mid_point.slope
-					angle = math.degrees(math.atan(slope_coin_mid_point))
-					#angle += 2
-					force = 10000
-					position = striker_y
-				else:
-					print 'Attempting straight shot on: ', coin_to_strike, '\n'
-					if coin_y > 500:
-						striker_y = striker_positions[len(striker_positions) - 1]
-						coin = (coin_x, coin_y - 25)
-					else:
-						striker_y = striker_positions[0]
-						coin = (coin_x, coin_y + 25)
-
-					striker_point = (striker_x, striker_y)
-					line_coin_striker = Line(coin, striker_point)
-					slope_coin_striker = line_coin_striker.slope
-					angle = math.degrees(math.atan(slope_coin_striker))
-					force = 8000
-					if back_coins:
-						force = 750
-					position = striker_y
-				angle += 90
+					force = 750
+				position = striker_y
+			angle += 90
 
 
 	print {'position': position, 'force': force, 'angle': angle}, '\n'
@@ -824,8 +699,6 @@ def coin_positions1(args, return_dict):
 				if striked:
 					break
 	return_dict['pocket1'] = pocket1_results
-
-
 
 socketIO.on('player_input', emit_response)
 socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
