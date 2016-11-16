@@ -351,20 +351,16 @@ def coin_positions3(args, return_dict):
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket3_x - coin_x, pocket3_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
-				if total_distance <= 1000 and angle_striker_coin_pocket >= 170:
-					force = total_distance *0.9
-				elif total_distance <= 1000 and angle_striker_coin_pocket < 170:
-					force = 1000	
-				elif total_distance > 1000 and angle_striker_coin_pocket >= 175:
-					force = 970
-				elif total_distance > 1000 and angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
-						force = 1100
-				elif total_distance > 1000 and angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
-					force = 2000
+				if angle_striker_coin_pocket >= 170:
+					force = 5200
+				elif angle_striker_coin_pocket < 170 and angle_striker_coin_pocket >= 150:
+					force = 6500
+				elif angle_striker_coin_pocket < 150:
+					force = 9000
 				else:
-					force = 4000
+					force = 10000
 				if total_distance < 800 and distance_coin_to_pocket < 50:
-					force =	700
+					force =	5000
 
 				angle += 90
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
@@ -462,20 +458,16 @@ def coin_positions1(args, return_dict):
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket1_x - coin_x, pocket1_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
-				if total_distance <= 1000 and angle_striker_coin_pocket >= 170:
-					force = total_distance *0.9
-				elif total_distance <= 1000 and angle_striker_coin_pocket < 170:
-					force = 1000	
-				elif total_distance > 1000 and angle_striker_coin_pocket >= 175:
-					force = 970
-				elif total_distance > 1000 and angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
-						force = 1100
-				elif total_distance > 1000 and angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
-					force = 2000
+				if angle_striker_coin_pocket >= 170:
+					force = 5200
+				elif angle_striker_coin_pocket < 170 and angle_striker_coin_pocket >= 150:
+					force = 6500
+				elif angle_striker_coin_pocket < 150:
+					force = 9000
 				else:
-					force = 4000
+					force = 10000
 				if total_distance < 800 and distance_coin_to_pocket < 50:
-					force =	700
+					force =	5000
 				angle += 90
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket1_results.append(strike)
@@ -556,8 +548,8 @@ def coin_positions4(args, return_dict):
 				coin_pocket = ((coin_x, coin_y), (1000, 0))
 				coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 				angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
-				# if angle_striker_coin_pocket < 140:
-				# 	continue
+				 if angle_striker_coin_pocket < 110:
+				 	continue
 				coin_point = (coin_x, coin_y)
 				circle = Circle(coin_point, 55)
 				line_coin_pocket = Line(coin_point, pocket4_point)
@@ -571,20 +563,16 @@ def coin_positions4(args, return_dict):
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket4_x - coin_x, pocket4_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
-				if total_distance <= 1000 and angle_striker_coin_pocket >= 170:
-					force = total_distance *0.9
-				elif total_distance <= 1000 and angle_striker_coin_pocket < 170:
-					force = 1000	
-				elif total_distance > 1000 and angle_striker_coin_pocket >= 175:
-					force = 970
-				elif total_distance > 1000 and angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
-						force = 1100
-				elif total_distance > 1000 and angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
-					force = 2000
+				if total_distance < 400 and angle_striker_coin_pocket >= 170:
+						force = 2000
+				elif total_distance < 400 and angle_striker_coin_pocket < 170 and angle_striker_coin_pocket >= 150:
+					force = 3000
+				elif angle_striker_coin_pocket < 170 and angle_striker_coin_pocket >= 150:
+					force = 4000	
+				elif angle_striker_coin_pocket < 150:
+					force = 9000
 				else:
-					force = 4000
-				if total_distance < 800 and distance_coin_to_pocket < 50:
-					force =	700
+					force = 10000
 
 				if intersection_point_x > striker_x:
 					angle += 270
@@ -669,8 +657,8 @@ def coin_positions2(args, return_dict):
 				coin_pocket = ((coin_x, coin_y), (1000, 0))
 				coin_striker = ((coin_x, coin_y),(striker_x, striker_y))
 				angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
-				# if angle_striker_coin_pocket < 140:
-				# 	continue
+				if angle_striker_coin_pocket < 110:
+				 	continue
 				coin_point = (coin_x, coin_y)
 				circle = Circle(coin_point, 55)
 				line_coin_pocket = Line(coin_point, pocket2_point)
@@ -684,20 +672,16 @@ def coin_positions2(args, return_dict):
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket2_x - coin_x, pocket2_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
-				if total_distance <= 1000 and angle_striker_coin_pocket >= 170:
-					force = total_distance *0.9
-				elif total_distance <= 1000 and angle_striker_coin_pocket < 170:
-					force = 1000	
-				elif total_distance > 1000 and angle_striker_coin_pocket >= 175:
-					force = 970
-				elif total_distance > 1000 and angle_striker_coin_pocket >= 170 and angle_striker_coin_pocket < 175:
-						force = 1100
-				elif total_distance > 1000 and angle_striker_coin_pocket > 120 and angle_striker_coin_pocket < 170:
+				if total_distance < 400 and angle_striker_coin_pocket >= 170:
 					force = 2000
+				elif total_distance < 400 and angle_striker_coin_pocket < 170 and angle_striker_coin_pocket >= 150:
+					force = 3000
+				elif angle_striker_coin_pocket < 170 and angle_striker_coin_pocket >= 150:
+					force = 4000	
+				elif angle_striker_coin_pocket < 150:
+					force = 9000
 				else:
-					force = 4000
-				if total_distance < 800 and distance_coin_to_pocket < 50:
-					force =	700
+					force = 10000
 
 				if intersection_point_x > striker_x:
 					angle += 270
