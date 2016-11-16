@@ -6,12 +6,17 @@ import multiprocessing as mp
 from multiprocessing import Manager
 import sys, select
 
-socketIO = SocketIO('10.7.90.8', 4000)
+# socketIO = SocketIO('10.7.90.8', 4000)
+socketIO = SocketIO('localhost', 4000)
 print socketIO.connected
 
-player1Key = 'T8uhv56xvs'
-player2Key = 'GSwwserRd2'
-gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+# player1Key = 'T8uhv56xvs'
+# player2Key = 'GSwwserRd2'
+# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+
+player1Key = 'p11'
+player2Key = 'p12'
+gameKey = '1'
 
 striker_x = 846.7742
 striker_y = 194
@@ -128,16 +133,26 @@ def coin_positions(*args):
 	q = mp.Queue()
 	job1 = mp.Process(target=coin_positions3, args=(positions, return_dict))
 	job2 = mp.Process(target=coin_positions1, args=(positions, return_dict))
+	job3 = mp.Process(target=coin_positions4, args=(positions, return_dict))
+	job4 = mp.Process(target=coin_positions2, args=(positions, return_dict))
 	job1.start()
 	job2.start()
+	job3.start()
+	job4.start()
 	job1.join()
 	job2.join()
+	job3.join()
+	job4.join()
 
 	print '\nresults3', return_dict['pocket3'], '\n' 
 	print '\nresults1', return_dict['pocket1'], '\n'
+	print '\nresults4', return_dict['pocket4'], '\n' 
+	print '\nresults2', return_dict['pocket2'], '\n'
 
 	result = return_dict['pocket3']
 	result.extend(return_dict['pocket1'])
+	result.extend(return_dict['pocket4'])
+	result.extend(return_dict['pocket2'])
 
 	black = []
 	white = []
@@ -571,7 +586,10 @@ def coin_positions4(args, return_dict):
 				if total_distance < 800 and distance_coin_to_pocket < 50:
 					force =	700
 
-				angle += 90
+				if intersection_point_x > striker_x:
+					angle += 270
+				else:
+					angle += 90
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket4_results.append(strike)
 				striked = True
@@ -582,7 +600,7 @@ def coin_positions4(args, return_dict):
 
 def coin_positions2(args, return_dict):
 	print 'Aiming for pocket2...' ,'\n'
-	positions = []]
+	positions = []
 	pocket2_results = []
 
 	for coin in args:
@@ -681,7 +699,10 @@ def coin_positions2(args, return_dict):
 				if total_distance < 800 and distance_coin_to_pocket < 50:
 					force =	700
 
-				angle += 90
+				if intersection_point_x > striker_x:
+					angle += 270
+				else:
+					angle += 90
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket2_results.append(strike)
 				striked = True

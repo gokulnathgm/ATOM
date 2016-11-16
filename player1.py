@@ -6,17 +6,17 @@ import multiprocessing as mp
 from multiprocessing import Manager
 import sys, select
 
-# socketIO = SocketIO('10.7.90.8', 4000)
-socketIO = SocketIO('localhost', 4000)
+socketIO = SocketIO('10.7.90.8', 4000)
+# socketIO = SocketIO('localhost', 4000)
 print socketIO.connected
 
-# player1Key = 'T8uhv56xvs'
-# player2Key = 'GSwwserRd2'
-# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+player1Key = 'T8uhv56xvs'
+player2Key = 'GSwwserRd2'
+gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-player1Key = 'p11'
-player2Key = 'p12'
-gameKey = '1'
+# player1Key = 'p11'
+# player2Key = 'p12'
+# gameKey = '1'
 
 first_strike = True
 set_strike_first = False
@@ -578,7 +578,7 @@ def coin_positions3(args, return_dict):
 					if total_distance < 800 and distance_coin_to_pocket < 50:
 						force =	5000
 					
-					if coin_x < striker_x:
+					if intersection_point_x < striker_x:
 						angle += 270
 					else:
 						angle += 90
@@ -687,7 +687,7 @@ def coin_positions1(args, return_dict):
 					if total_distance < 800 and distance_coin_to_pocket < 50:
 						force =	5000
 					
-					if coin_x < striker_x:
+					if intersection_point_x < striker_x:
 						angle += 270
 					else:
 						angle += 90
