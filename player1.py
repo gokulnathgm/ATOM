@@ -6,6 +6,7 @@ import multiprocessing as mp
 from multiprocessing import Manager
 import sys, select
 import time
+from shapely.geometry import *
 
 socketIO = SocketIO('10.7.90.8', 4000)
 # socketIO = SocketIO('localhost', 4000)
@@ -72,11 +73,11 @@ def distance_between_points(point1, point2):
 
 def clean_strikes(coins, destination_point, positions, radius_total, check):
 	strike_through = []
+	pocket_point = (destination_point[0], destination_point[1])
 	for coin in coins:
 		coin_x = coin['x']
 		coin_y = coin['y']
 		coin_point = (coin_x, coin_y)
-		line_coin_pocket = Line(coin_point, destination_point)
 		distance_coin_pocket = distance_between_points(coin_point, destination_point)
 		path = True
 		for coin_subset in positions:
@@ -86,7 +87,7 @@ def clean_strikes(coins, destination_point, positions, radius_total, check):
 			distance_subset_coin_pocket = distance_between_points(coin_subset_point, destination_point)
 			distance_between_coins = distance_between_points(coin_point, coin_subset_point)
 			if(distance_coin_pocket > distance_between_coins and distance_coin_pocket > distance_subset_coin_pocket):
-				if float(line_coin_pocket.perpendicular_segment(coin_subset_point).length) < radius_total:
+				if Point(coin_subset_x, coin_subset_y).intersects(LineString((coin_point,pocket_point)).buffer(50)):
 					path = False
 					break
 		if path:
