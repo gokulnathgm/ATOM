@@ -80,6 +80,18 @@ def clean_strikes(coins, destination_point, positions, radius_total):
 		for coin_subset in positions:
 			coin_subset_x = coin_subset['x']
 			coin_subset_y = coin_subset['y']
+			if destination_point === pocket4_point:
+				if coin_subset_x < coin_x - 25 or coin_subset_y < coin_y - 25:
+					continue
+			elif destination_point === pocket2_point:
+				if coin_subset_x < coin_x - 25 or coin_subset_y > coin_y + 25:
+					continue
+			elif destination_point === pocket3_point:
+				if coin_subset_x > coin_x + 25 or coin_subset_y < coin_y - 25:
+					continue	
+			else 
+				if coin_subset_x > coin_x + 25 or coin_subset_y > coin_y + 25:
+					continue							
 			coin_subset_point = (coin_subset_x, coin_subset_y)
 			distance_subset_coin_pocket = distance_between_points(coin_subset_point, destination_point)
 			distance_between_coins = distance_between_points(coin_point, coin_subset_point)
