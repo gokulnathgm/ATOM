@@ -3,17 +3,17 @@ from sympy.geometry import *
 from sympy import sympify
 import random
 
-# socketIO = SocketIO('10.7.90.8', 4000)
-socketIO = SocketIO('localhost', 4000)
-print socketIO.connected
+socketIO = SocketIO('10.7.90.8', 4000)
+# socketIO = SocketIO('localhost', 4000)
+# print socketIO.connected
 
-# player1Key = 'T8uhv56xvs'
-# player2Key = 'GSwwserRd2'
-# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+player1Key = 'T8uhv56xvs'
+player2Key = 'GSwwserRd2'
+gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-player1Key = 'p11'
-player2Key = 'p12'
-gameKey = '1'
+# player1Key = 'p11'
+# player2Key = 'p12'
+# gameKey = '1'
 
 def emit_response(*args):
 	print 'Emit response'

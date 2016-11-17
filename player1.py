@@ -8,17 +8,17 @@ import sys, select
 import time
 from shapely.geometry import *
 
-# socketIO = SocketIO('10.7.90.8', 4000)
-socketIO = SocketIO('localhost', 4000)
-print socketIO.connected
+socketIO = SocketIO('10.7.90.8', 4000)
+# socketIO = SocketIO('localhost', 4000)
+# print socketIO.connected
 
-# player1Key = 'T8uhv56xvs'
-# player2Key = 'GSwwserRd2'
-# gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
+player1Key = 'T8uhv56xvs'
+player2Key = 'GSwwserRd2'
+gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-player1Key = 'p11'
-player2Key = 'p12'
-gameKey = '1'
+# player1Key = 'p11'
+# player2Key = 'p12'
+# gameKey = '1'
 
 # player1Key = 'Jkuy6wsxDa'
 # player2Key = 'GSwwserRd2'
@@ -81,28 +81,28 @@ def clean_strikes(coins, destination_point, positions, radius_total, between):
 			coin_subset_y = coin_subset['y']
 			if between == 0:
 				if destination_point == pocket4_point:
-					if coin_subset_x < coin_x - 25 or coin_subset_y < coin_y - 25:
+					if coin_subset_x < coin_x - 50 or coin_subset_y < coin_y - 50:
 						continue
 				elif destination_point == pocket2_point:
-					if coin_subset_x < coin_x - 25 or coin_subset_y > coin_y + 25:
+					if coin_subset_x < coin_x - 50 or coin_subset_y > coin_y + 50:
 						continue
 				elif destination_point == pocket3_point:
-					if coin_subset_x > coin_x + 25 or coin_subset_y < coin_y - 25:
+					if coin_subset_x > coin_x + 50 or coin_subset_y < coin_y - 50:
 						continue	
 				else: 
-					if coin_subset_x > coin_x + 25 or coin_subset_y > coin_y + 25:
+					if coin_subset_x > coin_x + 50 or coin_subset_y > coin_y + 50:
 						continue
 			elif between == 4:
-				if coin_subset_x > coin_x + 25 or coin_subset_y > coin_y + 25 or coin_subset_x < destination_point[0] - 30 or coin_subset_y < destination_point[1] - 30:
+				if coin_subset_x > coin_x + 50 or coin_subset_y > coin_y + 50 or coin_subset_x < destination_point[0] - 55 or coin_subset_y < destination_point[1] - 55:
 					continue	
 			elif between == 2:
-				if coin_subset_x > coin_x + 25 or coin_subset_y < coin_y - 25 or coin_subset_x < destination_point[0] - 30 or coin_subset_y > destination_point[1] + 30:
+				if coin_subset_x > coin_x + 50 or coin_subset_y < coin_y - 50 or coin_subset_x < destination_point[0] - 55 or coin_subset_y > destination_point[1] + 55:
 					continue
 			elif between == 3:
-				if coin_subset_x < coin_x - 25 or coin_subset_y > coin_y + 25 or coin_subset_x > destination_point[0] + 30 or coin_subset_y < destination_point[1] - 30:
+				if coin_subset_x < coin_x - 50 or coin_subset_y > coin_y + 50 or coin_subset_x > destination_point[0] + 55 or coin_subset_y < destination_point[1] - 55:
 					continue
 			else:
-				if coin_subset_x < coin_x - 25 or coin_subset_y < coin_y - 25 or coin_subset_x > destination_point[0] + 30 or coin_subset_y > destination_point[1] + 30:
+				if coin_subset_x < coin_x - 50 or coin_subset_y < coin_y - 50 or coin_subset_x > destination_point[0] + 55 or coin_subset_y > destination_point[1] + 55:
 					continue														
 			coin_subset_point = (coin_subset_x, coin_subset_y)
 			distance_subset_coin_pocket = distance_between_points(coin_subset_point, destination_point)
