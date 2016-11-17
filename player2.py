@@ -63,7 +63,7 @@ def distance_between_points(point1, point2):
 	distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 	return distance
 
-def clean_strikes(coins, destination_point, positions, radius_total):
+def clean_strikes(coins, destination_point, positions, radius_total, between):
 	strike_through = []
 	pocket_point = (destination_point[0], destination_point[1])
 	for coin in coins:
@@ -75,6 +75,31 @@ def clean_strikes(coins, destination_point, positions, radius_total):
 		for coin_subset in positions:
 			coin_subset_x = coin_subset['x']
 			coin_subset_y = coin_subset['y']
+			if between == 0:
+				if destination_point == pocket4_point:
+					if coin_subset_x < coin_x - 50 or coin_subset_y < coin_y - 50:
+						continue
+				elif destination_point == pocket2_point:
+					if coin_subset_x < coin_x - 50 or coin_subset_y > coin_y + 50:
+						continue
+				elif destination_point == pocket3_point:
+					if coin_subset_x > coin_x + 50 or coin_subset_y < coin_y - 50:
+						continue	
+				else: 
+					if coin_subset_x > coin_x + 50 or coin_subset_y > coin_y + 50:
+						continue
+			elif between == 4:
+				if coin_subset_x > coin_x + 50 or coin_subset_y > coin_y + 50 or coin_subset_x < destination_point[0] - 55 or coin_subset_y < destination_point[1] - 55:
+					continue	
+			elif between == 2:
+				if coin_subset_x > coin_x + 50 or coin_subset_y < coin_y - 50 or coin_subset_x < destination_point[0] - 55 or coin_subset_y > destination_point[1] + 55:
+					continue
+			elif between == 3:
+				if coin_subset_x < coin_x - 50 or coin_subset_y > coin_y + 50 or coin_subset_x > destination_point[0] + 55 or coin_subset_y < destination_point[1] - 55:
+					continue
+			else:
+				if coin_subset_x < coin_x - 50 or coin_subset_y < coin_y - 50 or coin_subset_x > destination_point[0] + 55 or coin_subset_y > destination_point[1] + 55:
+					continue					
 			coin_subset_point = (coin_subset_x, coin_subset_y)
 			distance_subset_coin_pocket = distance_between_points(coin_subset_point, destination_point)
 			distance_between_coins = distance_between_points(coin_point, coin_subset_point)
@@ -204,7 +229,7 @@ def coin_positions3(args, return_dict):
 	pocket3_results = []
 	positions = args
 	
-	strike_through_pocket = clean_strikes(positions, pocket3_point, positions, 50)
+	strike_through_pocket = clean_strikes(positions, pocket3_point, positions, 50, 0)
 	print 'clean1: ', strike_through_pocket, '\n'
 
 	striker_pos = [194, 806, 294, 394, 494, 594, 694]
@@ -239,7 +264,7 @@ def coin_positions3(args, return_dict):
 			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id']}
 			strike_through_pocket_modified.append(point)
 
-		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55)
+		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, 3)
 		print 'clean2: ', strike_through_striker, '\n'
 
 		striked = False
@@ -283,7 +308,7 @@ def coin_positions1(args, return_dict):
 	pocket1_results = []
 	positions = args
 
-	strike_through_pocket = clean_strikes(positions, pocket1_point, positions, 50)
+	strike_through_pocket = clean_strikes(positions, pocket1_point, positions, 50, 0)
 	print 'clean1: ', strike_through_pocket, '\n'
 
 	striker_pos = [806, 194, 706, 606, 506, 406, 306]
@@ -318,7 +343,7 @@ def coin_positions1(args, return_dict):
 			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id']}
 			strike_through_pocket_modified.append(point)
 
-		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55)
+		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55, 1)
 		print 'clean2: ', strike_through_striker, '\n'
 
 		striked = False
