@@ -104,7 +104,7 @@ def through_shot(coins, positions, pocket):
 		intersection_point = strike_line.intersection(coin_pocket)
 		int_x = intersection_point[0][0]
 		int_y = intersection_point[0][1]
-		if int_y > 806.5416 or int_y < 153.2258:
+		if int_y > 806.5416 or int_y < 193.5484:
 			continue
 		intersection_point = (int_x, int_y)
 		path = True
