@@ -45,7 +45,6 @@ pocket3_point = (pocket3_x, pocket3_y)
 pocket2_point = (pocket2_x, pocket2_y)
 pocket1_point = (pocket1_x, pocket1_y)
 striker_point = (striker_x, striker_y)
-
 def dot(vA, vB):
     return vA[0] * vB[0] + vA[1] * vB[1]
 
@@ -81,29 +80,29 @@ def clean_strikes(coins, destination_point, positions, radius_total, between):
 			coin_subset_x = coin_subset['x']
 			coin_subset_y = coin_subset['y']
 			if between == 0:
-				if destination_point === pocket4_point:
+				if destination_point == pocket4_point:
 					if coin_subset_x < coin_x - 25 or coin_subset_y < coin_y - 25:
 						continue
-				elif destination_point === pocket2_point:
+				elif destination_point == pocket2_point:
 					if coin_subset_x < coin_x - 25 or coin_subset_y > coin_y + 25:
 						continue
-				elif destination_point === pocket3_point:
+				elif destination_point == pocket3_point:
 					if coin_subset_x > coin_x + 25 or coin_subset_y < coin_y - 25:
 						continue	
 				else: 
 					if coin_subset_x > coin_x + 25 or coin_subset_y > coin_y + 25:
 						continue
 			elif between == 4:
-				if coin_subset_x > coin_x + 25 or coin_subset_y > coin_y + 25:
+				if coin_subset_x > coin_x + 25 or coin_subset_y > coin_y + 25 or coin_subset_x < destination_point[0] - 30 or coin_subset_y < destination_point[1] - 30:
 					continue	
 			elif between == 2:
-				if coin_subset_x > coin_x + 25 or coin_subset_y < coin_y - 25:
+				if coin_subset_x > coin_x + 25 or coin_subset_y < coin_y - 25 or coin_subset_x < destination_point[0] - 30 or coin_subset_y > destination_point[1] + 30:
 					continue
 			elif between == 3:
-				if coin_subset_x < coin_x - 25 or coin_subset_y > coin_y + 25:
+				if coin_subset_x < coin_x - 25 or coin_subset_y > coin_y + 25 or coin_subset_x > destination_point[0] + 30 or coin_subset_y < destination_point[1] - 30:
 					continue
 			else:
-				if coin_subset_x < coin_x - 25 or coin_subset_y < coin_y - 25:
+				if coin_subset_x < coin_x - 25 or coin_subset_y < coin_y - 25 or coin_subset_x > destination_point[0] + 30 or coin_subset_y > destination_point[1] + 30:
 					continue														
 			coin_subset_point = (coin_subset_x, coin_subset_y)
 			distance_subset_coin_pocket = distance_between_points(coin_subset_point, destination_point)
