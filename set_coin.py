@@ -22,10 +22,18 @@ print "(x, y) :"
 x = float(raw_input())
 y = float(raw_input())
 x, y = point_conversion_to_global(x, y)
+# x1 = float(raw_input())
+# y1 = float(raw_input())
+# x1, y1 = point_conversion_to_global(x1, y1)
+# x2 = float(raw_input())
+# y2 = float(raw_input())
+# x2, y2 = point_conversion_to_global(x2, y2)
 game.update_one({"gameKey":"1"},
  	{"$set" : {"currentPosition" : [
    
- 		{ "x" : x, "y" : y, "type" : "black", "id" : "b1" }, 
+ 		{ "x" : x, "y" : y, "type" : "red", "id" : "r1" }, 
+ 		# { "x" : x1, "y" : y1, "type" : "white", "id" : "w1" }, 
+ 		# { "x" : x2, "y" : y2, "type" : "black", "id" : "b1" }, 
  		{ "x" : 514.303156964414, "y" : 600, "type" : "stricker", "id" : "s1" } ,
  		# { "x" : 500, "y" : 500, "type" : "red", "id" : "r1" } 
  		] }},
