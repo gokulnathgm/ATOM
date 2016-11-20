@@ -1,10 +1,7 @@
 from socketIO_client import SocketIO
-from sympy.geometry import *
-from sympy import sympify
 import math
 import multiprocessing as mp
 from multiprocessing import Manager
-import sys, select
 import time
 from shapely.geometry import *
 
@@ -91,37 +88,21 @@ def clean_strikes(coins, destination_point, positions, radius_total):
 			strike_through.append(coin)
 	return strike_through
 
-def through_shot(coins, positions, pocket):
-	through_coins = []
-	red_available = False
-	white_available = False
-	strike_line = Line((153.2258, 193.5484),(153.2258, 806.4516))
-	for coin in coins:
-		coin_x = coin['x']
-		coin_y = coin['y']
-		coin_point = (coin_x, coin_y)
-		coin_pocket = Line(coin_point, pocket)
-		intersection_point = strike_line.intersection(coin_pocket)
-		int_x = intersection_point[0][0]
-		int_y = intersection_point[0][1]
-		if int_y > 806.5416 or int_y < 193.5484:
-			continue
-		intersection_point = (int_x, int_y)
-		path = True
-		for j in positions:
-			pos_x = j['x']
-			pos_y = j['y']
-			if (pos_x > 99 and pos_x < 209) and (pos_y > int_y - 55 and pos_y < int_y + 55):
-				path = False
-				break
-			if pos_x >= coin_x:
-				continue
-			if Point(pos_x, pos_y).intersects(LineString((coin_point,intersection_point)).buffer(55)):
-				path = False
-				break
-		if path:
-			through_coins.append(coin);
-	return through_coins
+def hit_point(coin_point, pocket_point, pocket):
+	coin_x, coin_y = coin_point[0], coin_point[1]
+	pocket_x, pocket_y = pocket_point[0], pocket_point[1]
+	m = (pocket_y - coin_y) / (pocket_x - coin_x)
+	if coin_x < pocket_x:
+		int_x = coin_x - (55 / math.sqrt(1 + m * m))
+	elif coin_x > pocket_x:
+		int_x = coin_x + (55 / math.sqrt(1 + m * m))
+	elif pocket == 2 or pocket == 4:
+		int_x = coin_x - (55 / math.sqrt(1 + m * m))
+	else:
+		int_x = coin_x + (55 / math.sqrt(1 + m * m))
+	int_y = coin_y +  (m * (int_x - coin_x))
+	intxn = (int_x, int_y)
+	return intxn
 
 def emit_response(*args):
 	print 'Emit response'
@@ -155,7 +136,7 @@ def coin_positions(*args):
 	return_dict = manager.dict()
 	global first_strike
 	global set_strike_first
-	# first_strike = False
+	first_strike = False
 	if first_strike:
 		first_strike = False
 		angle = 90
@@ -237,19 +218,16 @@ def coin_positions(*args):
 			if coin_y > 500:
 				striker_y = striker_positions[0]
 				pocket_point = pocket4_point
+				pocket = 4
 			else:
 				striker_y = striker_positions[len(striker_positions) - 1]
 				pocket_point = pocket2_point
+				pocket = 2
 			
 			striker_point = (striker_x, striker_y)
-			circle = Circle(coin_point, 55)
-			line_coin_pocket = Line(coin_point, pocket_point)
-			intersection_points = circle.intersection(line_coin_pocket)
-			intersection_point_x = float(intersection_points[0][0])
-			intersection_point_y = float(intersection_points[0][1])
-			intersection_point = (intersection_point_x, intersection_point_y)
-			line_coin_striker = Line(intersection_point, striker_point)
-			slope_coin_striker = line_coin_striker.slope
+			intersection_point = hit_point(coin_point, pocket_point, pocket)
+			int_x, int_y = intersection_point[0], intersection_point[1]
+			slope_coin_striker = (int_y - striker_y) / (int_x - striker_x)
 			angle = math.degrees(math.atan(slope_coin_striker))
 			force = 6000
 			position = striker_y
@@ -269,20 +247,22 @@ def coin_positions4(args, return_dict):
 
 	through_coin = {}
 	if strike_through_pocket:
-		strike_line = Line((153.2258, 193.5484),(153.2258, 806.4516))
+		# strike_line = Line((153.2258, 193.5484),(153.2258, 806.4516))
 		for coin in strike_through_pocket:
 			coin_x = coin['x']
 			coin_y = coin['y']
 			if coin_x < 153.2258 + 55:
 				continue
 			coin_point = (coin_x, coin_y)
-			coin_pocket = Line(coin_point, pocket4_point)
-			slope = coin_pocket.slope
-			angle = math.degrees(math.atan(slope))
+			# coin_pocket = Line(coin_point, pocket4_point)
+			# slope = coin_pocket.slope
+			# angle = math.degrees(math.atan(slope))
+			m = (coin_y - pocket4_y) / (coin_x - pocket4_x)
+			int_y = m * (153.2258 - coin_x) + coin_y
+			# intersection_point = strike_line.intersection(coin_pocket)
+			angle = math.degrees(math.atan(m))
 			angle += 90
-			intersection_point = strike_line.intersection(coin_pocket)
-			int_x = intersection_point[0][0]
-			int_y = intersection_point[0][1]
+			int_x = 153.2258
 			if int_y > 806.5416 or int_y < 193.5484:
 				continue
 			intersection_point = (int_x, int_y)
@@ -308,12 +288,9 @@ def coin_positions4(args, return_dict):
 				break
 		if 'red' not in through_coin.values() and strike_through_pocket[0]['type'] == 'red':
 			coin_point = (strike_through_pocket[0]['x'], strike_through_pocket[0]['y'])
-			circle = Circle(coin_point, 55)
-			line_coin_pocket = Line(coin_point, pocket4_point)
-			intersection_points = circle.intersection(line_coin_pocket)
-			intersection_point_x = float(intersection_points[0][0])
-			intersection_point_y = float(intersection_points[0][1])
-			intersection_point = (intersection_point_x, intersection_point_y)
+			intersection_point = hit_point(coin_point, pocket4_point, 4)
+			intersection_point_x = intersection_point[0]
+			intersection_point_y = intersection_point[1]
 			striker_positions = []
 			for i in range(194,806,10):
 				valid_position = True
@@ -337,8 +314,7 @@ def coin_positions4(args, return_dict):
 					coin_striker = (intersection_point,striker_point)
 					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 					if angle_striker_coin_pocket > 140:
-						strike_line = Line(intersection_point, striker_point)
-						slope = strike_line.slope
+						slope = (intersection_point_y - i) / (intersection_point_x - striker_x)
 						angle = math.degrees(math.atan(slope))
 						angle += 90
 						red_strikes['angle'] = angle
@@ -370,11 +346,9 @@ def coin_positions4(args, return_dict):
 			if coin_y < 194 + 50 or coin_x < 153 + 50:
 				continue
 			coin_point = (coin_x, coin_y)
-			circle = Circle(coin_point, 55)
-			line_coin_pocket = Line(coin_point, pocket4_point)
-			intersection_points = circle.intersection(line_coin_pocket)
-			intersection_point_x = float(intersection_points[0][0])
-			intersection_point_y = float(intersection_points[0][1])
+			intersection_point = hit_point(coin_point, pocket4_point, 4)
+			intersection_point_x = intersection_point[0]
+			intersection_point_y = intersection_point[1]
 			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id']}
 			strike_through_pocket_modified.append(point)
 
@@ -392,10 +366,8 @@ def coin_positions4(args, return_dict):
 				if angle_striker_coin_pocket < 140:
 					continue
 				coin_point = (coin_x, coin_y)
-				strike_line = Line(coin_point, striker_point)
-				slope = strike_line.slope
+				slope = (coin_y - striker_y) / (coin_x - striker_x)
 				angle = math.degrees(math.atan(slope))
-
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket4_x - coin_x, pocket4_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
@@ -427,20 +399,21 @@ def coin_positions2(args, return_dict):
 
 	through_coin = {}
 	if strike_through_pocket:
-		strike_line = Line((153.2258, 193.5484),(153.2258, 806.4516))
+		# strike_line = Line((153.2258, 193.5484),(153.2258, 806.4516))
 		for coin in strike_through_pocket:
 			coin_x = coin['x']
 			coin_y = coin['y']
 			if coin_x < 153.2258 + 55:
 				continue
 			coin_point = (coin_x, coin_y)
-			coin_pocket = Line(coin_point, pocket2_point)
-			slope = coin_pocket.slope
-			angle = math.degrees(math.atan(slope))
+			m = (coin_y - pocket2_y) / (coin_x - pocket2_x)
+			int_y = m * (153.2258 - coin_x) + coin_y
+			# coin_pocket = Line(coin_point, pocket2_point)
+			# slope = coin_pocket.slope
+			angle = math.degrees(math.atan(m))
 			angle += 90
-			intersection_point = strike_line.intersection(coin_pocket)
-			int_x = intersection_point[0][0]
-			int_y = intersection_point[0][1]
+			# intersection_point = strike_line.intersection(coin_pocket)
+			int_x = 153.2258
 			if int_y > 806.5416 or int_y < 193.5484:
 				continue
 			intersection_point = (int_x, int_y)
@@ -466,11 +439,12 @@ def coin_positions2(args, return_dict):
 				break
 		if 'red' not in through_coin.values() and strike_through_pocket[0]['type'] == 'red':
 			coin_point = (strike_through_pocket[0]['x'], strike_through_pocket[0]['y'])
-			circle = Circle(coin_point, 55)
-			line_coin_pocket = Line(coin_point, pocket2_point)
-			intersection_points = circle.intersection(line_coin_pocket)
-			intersection_point_x = float(intersection_points[0][0])
-			intersection_point_y = float(intersection_points[0][1])
+			# circle = Circle(coin_point, 55)
+			# line_coin_pocket = Line(coin_point, pocket2_point)
+			# intersection_points = circle.intersection(line_coin_pocket)
+			intersection_point = hit_point(coin_point, pocket2_point, 2)
+			intersection_point_x = intersection_point[0]
+			intersection_point_y = intersection_point[1]
 			intersection_point = (intersection_point_x, intersection_point_y)
 			striker_positions = []
 			for i in range(806,194,-10):
@@ -495,8 +469,9 @@ def coin_positions2(args, return_dict):
 					coin_striker = (intersection_point,striker_point)
 					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 					if angle_striker_coin_pocket > 140:
-						strike_line = Line(intersection_point, striker_point)
-						slope = strike_line.slope
+						# strike_line = Line(intersection_point, striker_point)
+						slope = (intersection_point_y - i) / (intersection_point_x - striker_x)
+						# slope = strike_line.slope
 						angle = math.degrees(math.atan(slope))
 						angle += 90
 						red_strikes['angle'] = angle
@@ -528,11 +503,12 @@ def coin_positions2(args, return_dict):
 			if coin_y > 806 - 50 or coin_x < 153 + 50:
 				continue
 			coin_point = (coin_x, coin_y)
-			circle = Circle(coin_point, 55)
-			line_coin_pocket = Line(coin_point, pocket2_point)
-			intersection_points = circle.intersection(line_coin_pocket)
-			intersection_point_x = float(intersection_points[0][0])
-			intersection_point_y = float(intersection_points[0][1])
+			# circle = Circle(coin_point, 55)
+			# line_coin_pocket = Line(coin_point, pocket2_point)
+			# intersection_points = circle.intersection(line_coin_pocket)
+			intersection_point = hit_point(coin_point, pocket2_point, 2)
+			intersection_point_x = intersection_point[0]
+			intersection_point_y = intersection_point[1]
 			point = {'x': intersection_point_x, 'y': intersection_point_y, 'x1': coin_x, 'y1': coin_y, 'type': coin['type'], 'id': coin['id']}
 			strike_through_pocket_modified.append(point)
 
@@ -550,10 +526,10 @@ def coin_positions2(args, return_dict):
 				if angle_striker_coin_pocket < 140:
 					continue
 				coin_point = (coin_x, coin_y)
-				strike_line = Line(coin_point, striker_point)
-				slope = strike_line.slope
+				# strike_line = Line(coin_point, striker_point)
+				# slope = strike_line.slope
+				slope = (coin_y - striker_y) / (coin_x - striker_x)
 				angle = math.degrees(math.atan(slope))
-
 				distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 				distance_coin_to_pocket = math.hypot(pocket2_x - coin_x, pocket2_y - coin_y)
 				total_distance = distance_striker_to_coin + distance_coin_to_pocket
@@ -593,12 +569,13 @@ def coin_positions3(args, return_dict):
 		if strike_through_pocket:
 			if 'red' in strike_through_pocket[0].values():
 				coin_point = (strike_through_pocket[0]['x'], strike_through_pocket[0]['y'])
-				circle = Circle(coin_point, 55)
-				line_coin_pocket = Line(coin_point, pocket3_point)
-				intersection_points = circle.intersection(line_coin_pocket)
-				intersection_point_x = float(intersection_points[0][0])
-				intersection_point_y = float(intersection_points[0][1])
-				intersection_point = (intersection_point_x, intersection_point_y)
+				# circle = Circle(coin_point, 55)
+				# line_coin_pocket = Line(coin_point, pocket3_point)
+				# intersection_points = circle.intersection(line_coin_pocket)
+				intersection_point = hit_point(coin_point, pocket3_point, 3)
+				intersection_point_x = intersection_point[0]
+				intersection_point_y = intersection_point[1]
+				# intersection_point = (intersection_point_x, intersection_point_y)
 				striker_positions = []
 				for i in range(194,806,10):
 					valid_position = True
@@ -622,8 +599,9 @@ def coin_positions3(args, return_dict):
 						coin_striker = (intersection_point,striker_point)
 						angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 						if angle_striker_coin_pocket > 110:
-							strike_line = Line(intersection_point, striker_point)
-							slope = strike_line.slope
+							# strike_line = Line(intersection_point, striker_point)
+							# slope = strike_line.slope
+							slope = (intersection_point_y - i) / (intersection_point_x - striker_x)
 							angle = math.degrees(math.atan(slope))
 							if intersection_point_x < striker_x:
 								angle += 270
@@ -660,11 +638,12 @@ def coin_positions3(args, return_dict):
 				if coin_y < striker_y:
 					continue
 				coin_point = (coin_x, coin_y)
-				circle = Circle(coin_point, 55)
-				line_coin_pocket = Line(coin_point, pocket3_point)
-				intersection_points = circle.intersection(line_coin_pocket)
-				intersection_point_x = float(intersection_points[0][0])
-				intersection_point_y = float(intersection_points[0][1])
+				# circle = Circle(coin_point, 55)
+				# line_coin_pocket = Line(coin_point, pocket3_point)
+				# intersection_points = circle.intersection(line_coin_pocket)
+				intersection_point = hit_point(coin_point, pocket3_point, 3)
+				intersection_point_x = intersection_point[0]
+				intersection_point_y = intersection_point[1]
 				point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id']}
 				strike_through_pocket_modified.append(point)
 
@@ -682,8 +661,9 @@ def coin_positions3(args, return_dict):
 					# if angle_striker_coin_pocket < 110:
 					# 	continue
 					coin_point = (coin_x, coin_y)
-					strike_line = Line(coin_point, striker_point)
-					slope = strike_line.slope
+					# strike_line = Line(coin_point, striker_point)
+					# slope = strike_line.slope
+					slope = (coin_y - striker_y) / (coin_x - striker_x)
 					angle = math.degrees(math.atan(slope))
 					distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 					distance_coin_to_pocket = math.hypot(pocket3_x - coin_x, pocket3_y - coin_y)
@@ -710,7 +690,7 @@ def coin_positions3(args, return_dict):
 	return_dict['pocket3'] = pocket3_results
 
 def coin_positions1(args, return_dict):
-	print 'Aiming for pocket3...' ,'\n'
+	print 'Aiming for pocket1...' ,'\n'
 	positions = []
 	pocket1_results = []
 
@@ -727,12 +707,13 @@ def coin_positions1(args, return_dict):
 		if strike_through_pocket:
 			if 'red' in strike_through_pocket[0].values():
 				coin_point = (strike_through_pocket[0]['x'], strike_through_pocket[0]['y'])
-				circle = Circle(coin_point, 55)
-				line_coin_pocket = Line(coin_point, pocket1_point)
-				intersection_points = circle.intersection(line_coin_pocket)
-				intersection_point_x = float(intersection_points[0][0])
-				intersection_point_y = float(intersection_points[0][1])
-				intersection_point = (intersection_point_x, intersection_point_y)
+				# circle = Circle(coin_point, 55)
+				# line_coin_pocket = Line(coin_point, pocket1_point)
+				# intersection_points = circle.intersection(line_coin_pocket)
+				intersection_point = hit_point(coin_point, pocket1_point, 1)
+				intersection_point_x = intersection_point[0]
+				intersection_point_y = intersection_point[1]
+				# intersection_point = (intersection_point_x, intersection_point_y)
 				striker_positions = []
 				for i in range(806,194,-10):
 					valid_position = True
@@ -756,8 +737,9 @@ def coin_positions1(args, return_dict):
 						coin_striker = (intersection_point,striker_point)
 						angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
 						if angle_striker_coin_pocket > 110:
-							strike_line = Line(intersection_point, striker_point)
-							slope = strike_line.slope
+							# strike_line = Line(intersection_point, striker_point)
+							# slope = strike_line.slope
+							slope = (intersection_point_y - i) / (intersection_point_x - striker_x)
 							angle = math.degrees(math.atan(slope))
 							if intersection_point_x < striker_x:
 								angle += 270
@@ -794,11 +776,12 @@ def coin_positions1(args, return_dict):
 				if coin_y > striker_y:
 					continue
 				coin_point = (coin_x, coin_y)
-				circle = Circle(coin_point, 55)
-				line_coin_pocket = Line(coin_point, pocket1_point)
-				intersection_points = circle.intersection(line_coin_pocket)
-				intersection_point_x = float(intersection_points[0][0])
-				intersection_point_y = float(intersection_points[0][1])
+				# circle = Circle(coin_point, 55)
+				# line_coin_pocket = Line(coin_point, pocket1_point)
+				# intersection_points = circle.intersection(line_coin_pocket)
+				intersection_point = hit_point(coin_point, pocket1_point, 1)
+				intersection_point_x = intersection_point[0]
+				intersection_point_y = intersection_point[1]
 				point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id']}
 				strike_through_pocket_modified.append(point)
 
@@ -816,8 +799,9 @@ def coin_positions1(args, return_dict):
 					# if angle_striker_coin_pocket < 110:
 					# 	continue
 					coin_point = (coin_x, coin_y)
-					strike_line = Line(coin_point, striker_point)
-					slope = strike_line.slope
+					# strike_line = Line(coin_point, striker_point)
+					# slope = strike_line.slope
+					slope = (coin_y - striker_y) / (coin_x - striker_x)
 					angle = math.degrees(math.atan(slope))
 					distance_striker_to_coin = math.hypot(coin_x - striker_x, coin_y - striker_y)
 					distance_coin_to_pocket = math.hypot(pocket1_x - coin_x, pocket1_y - coin_y)
