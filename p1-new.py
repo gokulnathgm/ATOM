@@ -215,23 +215,47 @@ def coin_positions(*args):
 			coin_x = positions[0]['x']
 			coin_y = positions[0]['y']
 			coin_point = (coin_x, coin_y)
-			if coin_y > 500:
+			if coin_y < 153:
 				striker_y = striker_positions[0]
-				pocket_point = pocket4_point
-				pocket = 4
-			else:
+				intersection_point = hit_point(coin_point, pocket1_point, 1)
+				print '/////', intersection_point, '////'
+				int_x, int_y = intersection_point[0], intersection_point[1]
+				mid_y = (int_y + striker_y) / 2
+				mid_x = 1000
+				slope = (mid_y - striker_y) / (mid_x - striker_x)
+				angle = math.degrees(math.atan(slope))
+				angle += 90
+				position = striker_y
+				force = 10000
+			elif coin_y > 847:
 				striker_y = striker_positions[len(striker_positions) - 1]
-				pocket_point = pocket2_point
-				pocket = 2
-			
-			striker_point = (striker_x, striker_y)
-			intersection_point = hit_point(coin_point, pocket_point, pocket)
-			int_x, int_y = intersection_point[0], intersection_point[1]
-			slope_coin_striker = (int_y - striker_y) / (int_x - striker_x)
-			angle = math.degrees(math.atan(slope_coin_striker))
-			force = 6000
-			position = striker_y
-			angle += 90
+				intersection_point = hit_point(coin_point, pocket3_point, 3)
+				int_x, int_y = intersection_point[0], intersection_point[1]
+				mid_y = (int_y + striker_y) / 2
+				mid_x = 1000
+				slope = (mid_y - striker_y) / (mid_x - striker_x)
+				angle = math.degrees(math.atan(slope))
+				angle += 90
+				position = striker_y
+				force = 10000
+			else:	
+				if coin_y > 500:
+					striker_y = striker_positions[0]
+					pocket_point = pocket4_point
+					pocket = 4
+				else:
+					striker_y = striker_positions[len(striker_positions) - 1]
+					pocket_point = pocket2_point
+					pocket = 2
+				
+				striker_point = (striker_x, striker_y)
+				intersection_point = hit_point(coin_point, pocket_point, pocket)
+				int_x, int_y = intersection_point[0], intersection_point[1]
+				slope_coin_striker = (int_y - striker_y) / (int_x - striker_x)
+				angle = math.degrees(math.atan(slope_coin_striker))
+				force = 6000
+				position = striker_y
+				angle += 90
 
 	print("---------- %s seconds -----------" % (time.time() - start_time))
 	print {'position': position, 'force': force, 'angle': angle}, '\n'
@@ -384,9 +408,9 @@ def coin_positions4(args, return_dict):
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket4_results.append(strike)
 				striked = True
-				break
-			if striked:
-				break
+			# 	break
+			# if striked:
+			# 	break
 	return_dict['pocket4'] = pocket4_results
 
 def coin_positions2(args, return_dict):
@@ -546,9 +570,9 @@ def coin_positions2(args, return_dict):
 				strike = {'angle': angle, 'force': force, 'position': i, 'angle_mutual': angle_striker_coin_pocket, 'type': coin['type']}
 				pocket2_results.append(strike)
 				striked = True
-				break
-			if striked:
-				break
+			# 	break
+			# if striked:
+			# 	break
 	return_dict['pocket2'] = pocket2_results
 
 def coin_positions3(args, return_dict):
