@@ -31,7 +31,7 @@ x, y = point_conversion_to_global(x, y)
 game.update_one({"gameKey":"1"},
  	{"$set" : {"currentPosition" : [
    
- 		{ "x" : x, "y" : y, "type" : "red", "id" : "r1" }, 
+ 		{ "x" : x, "y" : y, "type" : "black", "id" : "b1" }, 
  		# { "x" : x1, "y" : y1, "type" : "white", "id" : "w1" }, 
  		# { "x" : x2, "y" : y2, "type" : "black", "id" : "b1" }, 
  		{ "x" : 514.303156964414, "y" : 600, "type" : "stricker", "id" : "s1" } ,
