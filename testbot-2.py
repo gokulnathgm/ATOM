@@ -10,11 +10,22 @@ player1Key = 'p11'
 player2Key = 'p12'
 gameKey = '1'
 
-def reflection_point(point1, point2):
+def reflection_point(point1, point2, pocket):
 	x1, y1 = point1[0], point1[1]
 	x2, y2 = point2[0], point2[1]
-	x = (((x1 * y2) + (x2 * y1)) / (y1 + y2))
-	return (x, 0)
+	if pocket == 4:
+		y = 0
+		x = ((x1 * y) + (x2 * y) - (x1 * y2) - (x2 * y1)) / ((2 * y) - y1 - y2)
+		point = (x, y)
+	elif pocket == 2:
+		y = 1000
+		x = ((x1 * y) + (x2 * y) - (x1 * y2) - (x2 * y1)) / ((2 * y) - y1 - y2)
+		point = (x, y)
+	elif pocket == 3 or pocket == 1:
+		x = 1000
+		y = ((x * y1) + (x * y2) - (x1 * y2) - (x2 * y1)) / ((2 * x) - x1 - x2)
+		point = (x, y)
+	return point	
 
 def emit_response(*args):
 	print 'Emit response'
@@ -68,7 +79,7 @@ def coin_positions(*args):
 	for coin in positions:
 		coin_x, coin_y = coin['x'], coin['y']
 		coin_point = (coin_x, coin_y)
-		strike_point = reflection_point(coin_point, pocket2_point)
+		strike_point = reflection_point(coin_point, pocket2_point, 2)
 		print 'strike_point', strike_point
 		strike_x, strike_y = strike_point[0], strike_point[1]
 		m = (coin_y - strike_y) / (coin_x - strike_x)
