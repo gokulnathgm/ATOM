@@ -5,23 +5,23 @@ from multiprocessing import Manager
 import time
 from shapely.geometry import *
 
-socketIO = SocketIO('10.7.90.8', 4000)
-print socketIO.connected
+# socketIO = SocketIO('10.7.90.8', 4000)
+# print socketIO.connected
 
 # player1Key = 'T8uhv56xvs'
 # player2Key = 'GSwwserRd2'
 # gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-# socketIO = SocketIO('localhost', 4000)
-# print socketIO.connected
+socketIO = SocketIO('localhost', 4000)
+print socketIO.connected
 
-# player1Key = 'p11'
-# player2Key = 'p12'
-# gameKey = '1'
+player1Key = 'p11'
+player2Key = 'p12'
+gameKey = '1'
 
-player1Key = 'T8uhv56xvs'
-player2Key = 'NlopqsKd4V'
-gameKey = 'Bd4RtiK6Tqas2mKnhvB6'
+# player1Key = 'T8uhv56xvs'
+# player2Key = 'NlopqsKd4V'
+# gameKey = 'Bd4RtiK6Tqas2mKnhvB6'
 
 striker_x = 846.7742
 striker_y = 194
@@ -643,7 +643,7 @@ def coin_positions1(args, return_dict):
 					for j in positions:
 						pos_x = j['x']
 						pos_y = j['y']
-						if (pos_x > 792 and pos_x < 902) and (pos_y > striker_y - 55 and striker_y < int_y + 55):
+						if (pos_x > 792 and pos_x < 902) and (pos_y > striker_y - 55 and pos_y < striker_y + 55):
 							path = False
 							break
 						if Point(pos_x, pos_y).intersects(LineString((striker, mid_point, intersection_point)).buffer(55)):

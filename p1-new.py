@@ -5,23 +5,23 @@ from multiprocessing import Manager
 import time
 from shapely.geometry import *
 
-socketIO = SocketIO('10.7.90.8', 4000)
-print socketIO.connected
+# socketIO = SocketIO('10.7.90.8', 4000)
+# print socketIO.connected
 
 # player1Key = 'T8uhv56xvs'
 # player2Key = 'GSwwserRd2'
 # gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-# socketIO = SocketIO('localhost', 4000)
-# print socketIO.connected
+socketIO = SocketIO('localhost', 4000)
+print socketIO.connected
 
-# player1Key = 'p11'
-# player2Key = 'p12'
-# gameKey = '1'
+player1Key = 'p11'
+player2Key = 'p12'
+gameKey = '1'
 
-player1Key = 'GTABE47UJG'
-player2Key = 'GSwwserRd2'
-gameKey = 'GmkLdxkgQa6gfkv7yD4W'
+# player1Key = 'GTABE47UJG'
+# player2Key = 'GSwwserRd2'
+# gameKey = 'GmkLdxkgQa6gfkv7yD4W'
 
 
 first_strike = True
@@ -106,6 +106,12 @@ def hit_point(coin_point, pocket_point, pocket):
 	intxn = (int_x, int_y)
 	return intxn
 
+def reflection_point(point1, point2):
+	x1, y1 = point1[0], point1[1]
+	x2, y2 = point2[0], point2[1]
+	x = ((x1 * y2) + (x2 * y1)) / (y1 + y2)
+	return (x, 0)
+
 def emit_response(*args):
 	print 'Emit response'
 	print args, '\n'
@@ -143,7 +149,7 @@ def coin_positions(*args):
 		first_strike = False
 		angle = 90
 		position = 500
-		force = 0
+		force = 10000
 	else:
 		q = mp.Queue()
 		job1 = mp.Process(target=coin_positions4, args=(positions, return_dict))
@@ -979,6 +985,41 @@ def coin_positions1(args, return_dict):
 				# if striked:
 				# 	break
 	return_dict['pocket1'] = pocket1_results
+
+# def pocket4_reverse(args, return_dict):
+# 	positions = []
+# 	for coin in args:
+# 		coin_x, coin_y = coin['x'], coin['y']
+# 		if coin_x < 500 and coin_y < 806:
+# 			positions.append(coin)
+# 	for coin in positions:
+# 		coin_x, coin_y = coin['x'], coin['y']
+# 		coin_point = (coin_x, coin_y)
+# 		strike_point = reflection_point(coin_point, pocket4_point)
+# 		strike_x, strike_y = strike_point[0], strike_point[1]
+
+# 		m = (coin_y - strike_y) / (coin_x - strike_x)
+# 		int_y = m * (153.2258 - coin_x) + coin_y
+# 		angle = math.degrees(math.atan(m))
+# 		angle += 90
+# 		int_x = 153.2258
+# 		if int_y > 806.5416 or int_y < 193.5484:
+# 			continue
+# 		intersection_point = (int_x, int_y)
+# 		path = True
+# 		for j in args:
+# 			pos_x = j['x']
+# 			pos_y = j['y']
+# 			if (pos_x > 99 and pos_x < 209) and (pos_y > int_y - 55 and pos_y < int_y + 55):
+# 				path = False
+# 				break
+# 			if pos_x >= coin_x:
+# 				continue
+# 			if Point(pos_x, pos_y).intersects(LineString((coin_point,intersection_point)).buffer(55)):
+# 				path = False
+# 				break
+# 		if path:
+
 
 socketIO.on('player_input', emit_response)
 socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
