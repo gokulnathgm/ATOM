@@ -14,15 +14,15 @@ def reflection_point(point1, point2, pocket):
 	x1, y1 = point1[0], point1[1]
 	x2, y2 = point2[0], point2[1]
 	if pocket == 4:
-		y = 25
+		y = 0
 		x = ((x1 * y) + (x2 * y) - (x1 * y2) - (x2 * y1)) / ((2 * y) - y1 - y2)
 		point = (x, y)
 	elif pocket == 2:
-		y = 975
+		y = 1000
 		x = ((x1 * y) + (x2 * y) - (x1 * y2) - (x2 * y1)) / ((2 * y) - y1 - y2)
 		point = (x, y)
 	elif pocket == 3 or pocket == 1:
-		x = 975
+		x = 1000
 		y = ((x * y1) + (x * y2) - (x1 * y2) - (x2 * y1)) / ((2 * x) - x1 - x2)
 		point = (x, y)
 	return point	
@@ -69,16 +69,18 @@ def coin_positions(*args):
 	positions.extend(white_coins)
 	positions.extend(black_coins)
 	args = positions[:]
+	print 'args: ', args
 	positions = []
 	for coin in args:
 		coin_x, coin_y = coin['x'], coin['y']
-		if coin_x > 153.2258 + 55 and coin_y > 194:
+		if coin_y < 806:
 			positions.append(coin)
+	print 'positions: ', positions
 	for coin in positions:
 		coin_x, coin_y = coin['x'], coin['y']
 		coin_point = (coin_x, coin_y)
-		strike_point = reflection_point(coin_point, pocket2_point, 2)
-		print 'strike_point', strike_point, coin
+		strike_point = reflection_point(coin_point, pocket1_point, 1)
+		print 'strike_point', strike_point
 		strike_x, strike_y = strike_point[0], strike_point[1]
 		m = (coin_y - strike_y) / (coin_x - strike_x)
 		int_y = m * (153.2258 - coin_x) + coin_y
@@ -88,15 +90,14 @@ def coin_positions(*args):
 		if int_y > 806.5416 or int_y < 193.5484:
 			continue
 		intersection_point = (int_x, int_y)
-		print 'intersection point: ', intersection_point, coin
+		print 'intersection point: ', intersection_point
 		path = True
 		for j in args:
 			pos_x = j['x']
 			pos_y = j['y']
 			if pos_x < 153.2258 or j == coin:
 				continue
-			print j
-			if Point(pos_x, pos_y).intersects(LineString((intersection_point, strike_point, pocket2_point)).buffer(50)):
+			if Point(pos_x, pos_y).intersects(LineString((intersection_point, strike_point, pocket1_point)).buffer(55)):
 				path = False
 				break
 		if path:

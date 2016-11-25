@@ -72,12 +72,12 @@ def coin_positions(*args):
 	positions = []
 	for coin in args:
 		coin_x, coin_y = coin['x'], coin['y']
-		if coin_x > 153.2258 + 55 and coin_y > 194:
+		if coin_y > 194 and coin_y < 806:
 			positions.append(coin)
 	for coin in positions:
 		coin_x, coin_y = coin['x'], coin['y']
 		coin_point = (coin_x, coin_y)
-		strike_point = reflection_point(coin_point, pocket2_point, 2)
+		strike_point = reflection_point(coin_point, pocket3_point, 3)
 		print 'strike_point', strike_point, coin
 		strike_x, strike_y = strike_point[0], strike_point[1]
 		m = (coin_y - strike_y) / (coin_x - strike_x)
@@ -95,13 +95,12 @@ def coin_positions(*args):
 			pos_y = j['y']
 			if pos_x < 153.2258 or j == coin:
 				continue
-			print j
-			if Point(pos_x, pos_y).intersects(LineString((intersection_point, strike_point, pocket2_point)).buffer(50)):
+			if Point(pos_x, pos_y).intersects(LineString((intersection_point, strike_point, pocket3_point)).buffer(55)):
 				path = False
 				break
 		if path:
 			position = int_y
-			force = 9000
+			force = 10000
 			break
 
 	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
