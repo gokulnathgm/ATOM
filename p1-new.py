@@ -155,12 +155,12 @@ def coin_positions(*args):
 	return_dict = manager.dict()
 	global first_strike
 	global set_strike_first
-	first_strike = False
+	# first_strike = False
 	if first_strike:
 		first_strike = False
 		angle = 135
 		position = 194
-		force = 5000
+		force = 10000
 	else:
 		q = mp.Queue()
 		job1 = mp.Process(target=coin_positions4, args=(positions, return_dict))
@@ -366,53 +366,53 @@ def coin_positions4(args, return_dict):
 
 			if not red_hit:
 				print '...................connected shot4 ..................'
-				red_coin_x = strike_through_pocket[0]['x']
-				red_coin_y = strike_through_pocket[0]['y']
-				red_coin = (red_coin_x, red_coin_y)
-				intxn = hit_point(red_coin, pocket4_point, 4)
-				intxn_x, intxn_y = intxn[0], intxn[1]
-				for coin in positions:
-					red_strikes = {}
-					coin_x = coin['x']
-					coin_y = coin['y']
-					coin_point = (coin_x, coin_y)
-					if coin_x < 153.2258 + 55 or coin['type'] == 'red':
-						continue
-					m = (coin_y - intxn_y) / (coin_x - intxn_x)
-					int_y = m * (153.2258 - coin_x) + coin_y
-					angle = math.degrees(math.atan(m))
-					angle += 90
-					int_x = 153.2258
-					if int_y > 806.5416 or int_y < 193.5484:
-						continue
-					intersection_point = (int_x, int_y)
-					coin_pocket = (intxn, pocket4_point)
-					coin_striker = (intxn,coin_point)
-					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
-					path = True
-					if angle_striker_coin_pocket < 150:
-						continue
-					for j in positions:
-						if j == coin or j['type'] == 'red':
-							continue
-						pos_x = j['x']
-						pos_y = j['y']
-						if (pos_x > 99 and pos_x < 209) and (pos_y > int_y - 55 and pos_y < int_y + 55):
-							path = False
-							break
-						if pos_x >= coin_x:
-							continue
-						if Point(pos_x, pos_y).intersects(LineString((coin_point,intersection_point)).buffer(55)):
-							path = False
-							break
-					if path:
-						red_hit = True
-						red_strikes['angle'] = angle
-						red_strikes['position'] = float(int_y)
-						red_strikes['angle_mutual'] = angle_striker_coin_pocket
-						red_strikes['type'] = 'red'
-						red_strikes['force'] = 5500
-						pocket4_results.append(red_strikes)
+				# red_coin_x = strike_through_pocket[0]['x']
+				# red_coin_y = strike_through_pocket[0]['y']
+				# red_coin = (red_coin_x, red_coin_y)
+				# intxn = hit_point(red_coin, pocket4_point, 4)
+				# intxn_x, intxn_y = intxn[0], intxn[1]
+				# for coin in positions:
+				# 	red_strikes = {}
+				# 	coin_x = coin['x']
+				# 	coin_y = coin['y']
+				# 	coin_point = (coin_x, coin_y)
+				# 	if coin_x < 153.2258 + 55 or coin['type'] == 'red':
+				# 		continue
+				# 	m = (coin_y - intxn_y) / (coin_x - intxn_x)
+				# 	int_y = m * (153.2258 - coin_x) + coin_y
+				# 	angle = math.degrees(math.atan(m))
+				# 	angle += 90
+				# 	int_x = 153.2258
+				# 	if int_y > 806.5416 or int_y < 193.5484:
+				# 		continue
+				# 	intersection_point = (int_x, int_y)
+				# 	coin_pocket = (intxn, pocket4_point)
+				# 	coin_striker = (intxn,coin_point)
+				# 	angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+				# 	path = True
+				# 	if angle_striker_coin_pocket < 150:
+				# 		continue
+				# 	for j in positions:
+				# 		if j == coin or j['type'] == 'red':
+				# 			continue
+				# 		pos_x = j['x']
+				# 		pos_y = j['y']
+				# 		if (pos_x > 99 and pos_x < 209) and (pos_y > int_y - 55 and pos_y < int_y + 55):
+				# 			path = False
+				# 			break
+				# 		if pos_x >= coin_x:
+				# 			continue
+				# 		if Point(pos_x, pos_y).intersects(LineString((coin_point,intersection_point)).buffer(55)):
+				# 			path = False
+				# 			break
+				# 	if path:
+				# 		red_hit = True
+				# 		red_strikes['angle'] = angle
+				# 		red_strikes['position'] = float(int_y)
+				# 		red_strikes['angle_mutual'] = angle_striker_coin_pocket
+				# 		red_strikes['type'] = 'red'
+				# 		red_strikes['force'] = 5500
+				# 		pocket4_results.append(red_strikes)
 
 			if not red_hit:
 				intersection_point = intxy
@@ -515,6 +515,12 @@ def coin_positions4(args, return_dict):
 	if strike:
 		print 'strike4: ', strike
 		pocket4_results.append(strike)
+
+	if strike_through_pocket:
+		strikes = pocket4_connected(strike_through_pocket, positions)
+		print 'strikes4: ', strikes
+		pocket4_results.extend(strikes)
+
 	return_dict['pocket4'] = pocket4_results
 
 def coin_positions2(args, return_dict):
@@ -604,53 +610,53 @@ def coin_positions2(args, return_dict):
 						pocket2_results.append(red_strikes)
 			if not red_hit:
 				print '...................connected shot2 ..................'
-				red_coin_x = strike_through_pocket[0]['x']
-				red_coin_y = strike_through_pocket[0]['y']
-				red_coin = (red_coin_x, red_coin_y)
-				intxn = hit_point(red_coin, pocket2_point, 2)
-				intxn_x, intxn_y = intxn[0], intxn[1]
-				for coin in positions:
-					red_strikes = {}
-					coin_x = coin['x']
-					coin_y = coin['y']
-					coin_point = (coin_x, coin_y)
-					if coin_x < 153.2258 + 55 or coin['type'] == 'red':
-						continue
-					m = (coin_y - intxn_y) / (coin_x - intxn_x)
-					int_y = m * (153.2258 - coin_x) + coin_y
-					angle = math.degrees(math.atan(m))
-					angle += 90
-					int_x = 153.2258
-					if int_y > 806.5416 or int_y < 193.5484:
-						continue
-					intersection_point = (int_x, int_y)
-					coin_pocket = (intxn, pocket2_point)
-					coin_striker = (intxn,coin_point)
-					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
-					path = True
-					if angle_striker_coin_pocket < 150:
-						continue
-					for j in positions:
-						if j == coin or j['type'] == 'red':
-							continue
-						pos_x = j['x']
-						pos_y = j['y']
-						if (pos_x > 99 and pos_x < 209) and (pos_y > int_y - 55 and pos_y < int_y + 55):
-							path = False
-							break
-						if pos_x >= coin_x:
-							continue
-						if Point(pos_x, pos_y).intersects(LineString((coin_point,intersection_point)).buffer(55)):
-							path = False
-							break
-					if path:
-						red_hit = True
-						red_strikes['angle'] = angle
-						red_strikes['position'] = float(int_y)
-						red_strikes['angle_mutual'] = angle_striker_coin_pocket
-						red_strikes['type'] = 'red'
-						red_strikes['force'] = 5500
-						pocket2_results.append(red_strikes)
+				# red_coin_x = strike_through_pocket[0]['x']
+				# red_coin_y = strike_through_pocket[0]['y']
+				# red_coin = (red_coin_x, red_coin_y)
+				# intxn = hit_point(red_coin, pocket2_point, 2)
+				# intxn_x, intxn_y = intxn[0], intxn[1]
+				# for coin in positions:
+				# 	red_strikes = {}
+				# 	coin_x = coin['x']
+				# 	coin_y = coin['y']
+				# 	coin_point = (coin_x, coin_y)
+				# 	if coin_x < 153.2258 + 55 or coin['type'] == 'red':
+				# 		continue
+				# 	m = (coin_y - intxn_y) / (coin_x - intxn_x)
+				# 	int_y = m * (153.2258 - coin_x) + coin_y
+				# 	angle = math.degrees(math.atan(m))
+				# 	angle += 90
+				# 	int_x = 153.2258
+				# 	if int_y > 806.5416 or int_y < 193.5484:
+				# 		continue
+				# 	intersection_point = (int_x, int_y)
+				# 	coin_pocket = (intxn, pocket2_point)
+				# 	coin_striker = (intxn,coin_point)
+				# 	angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+				# 	path = True
+				# 	if angle_striker_coin_pocket < 150:
+				# 		continue
+				# 	for j in positions:
+				# 		if j == coin or j['type'] == 'red':
+				# 			continue
+				# 		pos_x = j['x']
+				# 		pos_y = j['y']
+				# 		if (pos_x > 99 and pos_x < 209) and (pos_y > int_y - 55 and pos_y < int_y + 55):
+				# 			path = False
+				# 			break
+				# 		if pos_x >= coin_x:
+				# 			continue
+				# 		if Point(pos_x, pos_y).intersects(LineString((coin_point,intersection_point)).buffer(55)):
+				# 			path = False
+				# 			break
+				# 	if path:
+				# 		red_hit = True
+				# 		red_strikes['angle'] = angle
+				# 		red_strikes['position'] = float(int_y)
+				# 		red_strikes['angle_mutual'] = angle_striker_coin_pocket
+				# 		red_strikes['type'] = 'red'
+				# 		red_strikes['force'] = 5500
+				# 		pocket2_results.append(red_strikes)
 
 			if not red_hit:
 				print intxy
@@ -753,6 +759,12 @@ def coin_positions2(args, return_dict):
 	if strike:
 		print 'strike2: ', strike
 		pocket2_results.append(strike)
+	
+	if strike_through_pocket:
+		strikes = pocket2_connected(strike_through_pocket, positions)
+		print 'strikes2: ', strikes
+		pocket2_results.extend(strikes)
+
 	return_dict['pocket2'] = pocket2_results
 
 def coin_positions3(args, return_dict):
@@ -1176,6 +1188,95 @@ def pocket1_reverse(args):
 			break
 	return strike
 
+def pocket4_connected(clean1, positions):
+	strikes = []
+	for coins in clean1:
+		coins_x, coins_y = coins['x'], coins['y']
+		coins_point = (coins_x, coins_y)
+		intxn = hit_point(coins_point, pocket4_point, 4)
+		intxn_x, intxn_y = intxn[0], intxn[1]
+		for coin in positions:
+			strike = {}
+			coin_x = coin['x']
+			coin_y = coin['y']
+			coin_point = (coin_x, coin_y)
+			if coin_x < 153.2258 + 55 or coin == coins:
+				continue
+			m = (coin_y - intxn_y) / (coin_x - intxn_x)
+			int_y = m * (153.2258 - coin_x) + coin_y
+			angle = math.degrees(math.atan(m))
+			angle += 90
+			int_x = 153.2258
+			if int_y > 806.5416 or int_y < 193.5484:
+				continue
+			intersection_point = (int_x, int_y)
+			coin_pocket = (intxn, pocket4_point)
+			coin_striker = (intxn,coin_point)
+			angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+			path = True
+			if angle_striker_coin_pocket < 160:
+				continue
+			for j in positions:
+				if j == coin or j == coins:
+					continue
+				pos_x = j['x']
+				pos_y = j['y']
+				if Point(pos_x, pos_y).intersects(LineString((intersection_point, coin_point)).buffer(55)) or Point(pos_x, pos_y).intersects(LineString((coin_point, intxn)).buffer(50)):
+					path = False
+					break
+			if path:
+				strike['angle'] = angle
+				strike['position'] = float(int_y)
+				strike['angle_mutual'] = angle_striker_coin_pocket
+				strike['type'] = coins['type']
+				strike['force'] = 5500
+				strikes.append(strike)
+	return strikes
+
+def pocket2_connected(clean1, positions):
+	strikes = []
+	for coins in clean1:
+		coins_x, coins_y = coins['x'], coins['y']
+		coins_point = (coins_x, coins_y)
+		intxn = hit_point(coins_point, pocket2_point, 2)
+		intxn_x, intxn_y = intxn[0], intxn[1]
+		for coin in positions:
+			strike = {}
+			coin_x = coin['x']
+			coin_y = coin['y']
+			coin_point = (coin_x, coin_y)
+			if coin_x < 153.2258 + 55 or coin == coins:
+				continue
+			m = (coin_y - intxn_y) / (coin_x - intxn_x)
+			int_y = m * (153.2258 - coin_x) + coin_y
+			angle = math.degrees(math.atan(m))
+			angle += 90
+			int_x = 153.2258
+			if int_y > 806.5416 or int_y < 193.5484:
+				continue
+			intersection_point = (int_x, int_y)
+			coin_pocket = (intxn, pocket2_point)
+			coin_striker = (intxn,coin_point)
+			angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+			path = True
+			if angle_striker_coin_pocket < 160:
+				continue
+			for j in positions:
+				if j == coin or j == coins:
+					continue
+				pos_x = j['x']
+				pos_y = j['y']
+				if Point(pos_x, pos_y).intersects(LineString((intersection_point, coin_point)).buffer(55)) or Point(pos_x, pos_y).intersects(LineString((coin_point, intxn)).buffer(50)):
+					path = False
+					break
+			if path:
+				strike['angle'] = angle
+				strike['position'] = float(int_y)
+				strike['angle_mutual'] = angle_striker_coin_pocket
+				strike['type'] = coins['type']
+				strike['force'] = 5500
+				strikes.append(strike)
+	return strikes
 
 socketIO.on('player_input', emit_response)
 socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
