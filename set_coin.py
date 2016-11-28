@@ -28,18 +28,18 @@ x1, y1 = point_conversion_to_global(x1, y1)
 x2 = float(raw_input())
 y2 = float(raw_input())
 x2, y2 = point_conversion_to_global(x2, y2)
-# x3 = float(raw_input())
-# y3 = float(raw_input())
-# x3, y3 = point_conversion_to_global(x3, y3)
-# x4 = float(raw_input())
-# y4 = float(raw_input())
-# x4, y4 = point_conversion_to_global(x4, y4)
-# x5 = float(raw_input())
-# y5 = float(raw_input())
-# x5, y5 = point_conversion_to_global(x5, y5)
-# x6 = float(raw_input())
-# y6 = float(raw_input())
-# x6, y6 = point_conversion_to_global(x6, y6)
+x3 = float(raw_input())
+y3 = float(raw_input())
+x3, y3 = point_conversion_to_global(x3, y3)
+x4 = float(raw_input())
+y4 = float(raw_input())
+x4, y4 = point_conversion_to_global(x4, y4)
+x5 = float(raw_input())
+y5 = float(raw_input())
+x5, y5 = point_conversion_to_global(x5, y5)
+x6 = float(raw_input())
+y6 = float(raw_input())
+x6, y6 = point_conversion_to_global(x6, y6)
 
 game.update_one({"gameKey":"1"},
  	{"$set" : {"currentPosition" : [
@@ -47,10 +47,10 @@ game.update_one({"gameKey":"1"},
  		# { "x" : x, "y" : y, "type" : "red", "id" : "r1" }, 
  		 { "x" : x1, "y" : y1, "type" : "white", "id" : "w1" }, 
  		{ "x" : x2, "y" : y2, "type" : "black", "id" : "b1" },
- 		# { "x" : x3, "y" : y3, "type" : "black", "id" : "b2" }, 
- 		# { "x" : x4, "y" : y4, "type" : "black", "id" : "b3" }, 
- 		# { "x" : x5, "y" : y5, "type" : "black", "id" : "b4" }, 
- 		# { "x" : x6, "y" : y6, "type" : "black", "id" : "b5" },
+ 		{ "x" : x3, "y" : y3, "type" : "black", "id" : "b2" }, 
+ 		{ "x" : x4, "y" : y4, "type" : "black", "id" : "b3" }, 
+ 		{ "x" : x5, "y" : y5, "type" : "black", "id" : "b4" }, 
+ 		{ "x" : x6, "y" : y6, "type" : "black", "id" : "b5" },
 
  		{ "x" : 514.303156964414, "y" : 600, "type" : "stricker", "id" : "s1" } ,
  		# { "x" : 500, "y" : 500, "type" : "red", "id" : "r1" } 
