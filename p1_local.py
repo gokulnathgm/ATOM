@@ -3,12 +3,12 @@ from sympy.geometry import *
 from sympy import sympify
 import random
 
-socketIO = SocketIO('localhost', 4000)
+socketIO = SocketIO('10.7.20.30', 4000)
 print socketIO.connected
 
-player1Key = 'p11'
-player2Key = 'p12'
-gameKey = '1'
+player1Key = 'p21'
+player2Key = 'p22'
+gameKey = '2'
 
 def emit_response(*args):
 	print 'Emit response'

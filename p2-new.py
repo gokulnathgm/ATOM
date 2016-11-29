@@ -70,14 +70,18 @@ def clean_strikes(coins, destination_point, positions, radius_total):
 		coin_x = coin['x']
 		coin_y = coin['y']
 		coin_point = (coin_x, coin_y)
-		distance_coin_pocket = distance_between_points(coin_point, destination_point)
+		if radius_total == 55:
+			coin_point_true =  (coin['x1'], coin['y1'])
+		else:
+			coin_point_true = coin_point
+		distance_coin_pocket = distance_between_points(coin_point_true, destination_point)
 		path = True
 		for coin_subset in positions:
 			coin_subset_x = coin_subset['x']
 			coin_subset_y = coin_subset['y']
 			coin_subset_point = (coin_subset_x, coin_subset_y)
 			distance_subset_coin_pocket = distance_between_points(coin_subset_point, destination_point)
-			distance_between_coins = distance_between_points(coin_point, coin_subset_point)
+			distance_between_coins = distance_between_points(coin_point_true, coin_subset_point)
 			if(distance_coin_pocket > distance_between_coins and distance_coin_pocket > distance_subset_coin_pocket):
 				if Point(coin_subset_x, coin_subset_y).intersects(LineString((coin_point,pocket_point)).buffer(radius_total)):
 					path = False
@@ -467,7 +471,7 @@ def coin_positions3(args, return_dict):
 			intersection_point = hit_point(coin_point, pocket3_point, 3)
 			intersection_point_x = intersection_point[0]
 			intersection_point_y = intersection_point[1]
-			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id']}
+			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id'], 'x1': coin_x, 'y1': coin_y}
 			strike_through_pocket_modified.append(point)
 
 		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55)
@@ -716,7 +720,7 @@ def coin_positions1(args, return_dict):
 			intersection_point = hit_point(coin_point, pocket1_point, 1)
 			intersection_point_x = intersection_point[0]
 			intersection_point_y = intersection_point[1]
-			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id']}
+			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id'], 'x1': coin_x, 'y1': coin_y}
 			strike_through_pocket_modified.append(point)
 
 		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55)
@@ -849,7 +853,7 @@ def coin_positions4(args, return_dict):
 			intersection_point = hit_point(coin_point, pocket4_point, 4)
 			intersection_point_x = intersection_point[0]
 			intersection_point_y = intersection_point[1]
-			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id']}
+			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id'], 'x1': coin_x, 'y1': coin_y}
 			strike_through_pocket_modified.append(point)
 
 		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55)
@@ -981,7 +985,7 @@ def coin_positions2(args, return_dict):
 			intersection_point = hit_point(coin_point, pocket2_point, 2)
 			intersection_point_x = intersection_point[0]
 			intersection_point_y = intersection_point[1]
-			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id']}
+			point = {'x': intersection_point_x, 'y': intersection_point_y, 'type': coin['type'], 'id': coin['id'], 'x1': coin_x, 'y1': coin_y}
 			strike_through_pocket_modified.append(point)
 
 		strike_through_striker = clean_strikes(strike_through_pocket_modified, striker_point, positions, 55)
