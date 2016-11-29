@@ -159,7 +159,7 @@ def coin_positions(*args):
 	return_dict = manager.dict()
 	global first_strike
 	global set_strike_first
-	# first_strike = False
+	first_strike = False
 	if first_strike:
 		first_strike = False
 		angle = 90
@@ -812,6 +812,11 @@ def coin_positions3(args, return_dict):
 		print 'strike3: ', strike
 		pocket3_results.append(strike)
 
+	if strike_through_pocket:
+		strikes = pocket3_conencted(strike_through_pocket, positions)
+		print 'strikes3: ', strikes
+		pocket3_results.extend(strikes)
+
 	clean1 = clean_strikes(args, pocket3_point, args, 50)
 	if clean1:
 		strike = pocket3_rebound(clean1, args)
@@ -1217,10 +1222,59 @@ def pocket2_connected(clean1, positions):
 				strikes.append(strike)
 	return strikes
 
-def pocket3_conencted(args):
-	print ''
+def pocket3_conencted(clean1, positions):
+	strikes = []
+	for coins in clean1:
+		coins_x, coins_y = coins['x'], coins['y']
+		coins_point = (coins_x, coins_y)
+		intxn = hit_point(coins_point, pocket3_point, 3)
+		print 'intxn', intxn, coins
+		intxn_x, intxn_y = intxn[0], intxn[1]
+		for coin in positions:
+			coin_x = coin['x']
+			coin_y = coin['y']
+			coin_point = (coin_x, coin_y)
+			if coin == coins or coin_y > coins_y or intxn[0] > coin_x:
+				continue
+			print 'coin', coin
+			for i in range(194, 806, 51):
+				strike = {}
+				if i > coin_y:
+					break
+				striker_y = i
+				striker_point = (striker_x, striker_y)
+				hitpt = hit_point(coin_point, intxn, 3)
+				print 'hitpt: ', hitpt, i
+				path = True
+				for j in positions:
+					if j == coin or j == coins:
+						continue
+					pos_x = j['x']
+					pos_y = j['y']
+					print 'j', j
+					if Point(pos_x, pos_y).intersects(LineString((striker_point, hitpt)).buffer(55)) or Point(pos_x, pos_y).intersects(LineString((hitpt, intxn)).buffer(50)):
+						path = False
+						break
+				if path:
+					print 'i', i, striker_y
+					slope = (striker_y - hitpt[1]) / (striker_x - hitpt[0])
+					angle = math.degrees(math.atan(slope)) + 270
+					coin_pocket = (hitpt, intxn)
+					coin_striker = (hitpt, striker_point)
+					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+					strike['angle'] = angle
+					strike['position'] = i
+					strike['angle_mutual'] = angle_striker_coin_pocket
+					strike['type'] = coins['type']
+					strike['force'] = 5500
+					strike['function'] = 'pocket3_connected'
+					strike['id'] = coins['id']
+					strikes.append(strike)
 
-def pocket1_connected(args):
+	return strikes
+
+
+def pocket1_connected(clean1, positions):
 	print ''
 
 def pocket4_rebound(clean1, positions):
