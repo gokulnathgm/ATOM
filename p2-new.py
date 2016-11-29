@@ -441,7 +441,7 @@ def coin_positions3(args, return_dict):
 						pocket3_results.append(red_strikes)
 
 	# striker_pos = [194, 806, 294, 394, 494, 594, 694]
-	for i in range(194, 806, 50):
+	for i in range(194, 806, 51):
 		striker_ok = True	
 		striker_y = i
 		striker_point = (striker_x, striker_y)
@@ -690,7 +690,7 @@ def coin_positions1(args, return_dict):
 
 
 	# striker_pos = [806, 194, 706, 606, 506, 406, 306]
-	for i in range(806, 194, -50):
+	for i in range(806, 194, -51):
 		striker_ok = True	
 		striker_y = i
 		striker_point = (striker_x, striker_y)
@@ -823,7 +823,7 @@ def coin_positions4(args, return_dict):
 						pocket4_results.append(red_strikes)
 
 	striker_positions = []
-	for i in range(194,806,50):
+	for i in range(194,806,51):
 		valid_position = True
 		for j in args:
 			j_x = j['x']
