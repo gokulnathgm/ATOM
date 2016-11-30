@@ -5,23 +5,23 @@ from multiprocessing import Manager
 import time
 from shapely.geometry import *
 
-# socketIO = SocketIO('10.7.90.8', 4000)
-# print socketIO.connected
+socketIO = SocketIO('10.7.90.8', 4000)
+print socketIO.connected
 
 # player1Key = 'T8uhv56xvs'
 # player2Key = 'GSwwserRd2'
 # gameKey = '9lVRq6Py7a3Vl1I0c4Fm'
 
-socketIO = SocketIO('localhost', 4000)
-print socketIO.connected
+# socketIO = SocketIO('localhost', 4000)
+# print socketIO.connected
 
-player1Key = 'p11'
-player2Key = 'p12'
-gameKey = '1'
+# player1Key = 'p11'
+# player2Key = 'p12'
+# gameKey = '1'
 
-# player1Key = 'T8uhv56xvs'
-# player2Key = 'NlopqsKd4V'
-# gameKey = 'Bd4RtiK6Tqas2mKnhvB6'
+player1Key = 'T8uhv56xvs'
+player2Key = 'Gtr4EDFsw2'
+gameKey = 'gMdkrf4eWSKft5YHG5Rt3'
 
 striker_x = 846.7742
 striker_y = 194
@@ -237,7 +237,7 @@ def coin_positions(*args):
 			angle = math.degrees(math.atan(slope))
 			angle += 90
 			position = striker_y
-			force = 10000
+			force = 6000#1700
 		elif coin_y > 847:
 			striker_y = striker_positions[len(striker_positions) - 1]
 			intersection_point = hit_point(coin_point, pocket4_point, 4)
@@ -248,7 +248,7 @@ def coin_positions(*args):
 			angle = math.degrees(math.atan(slope))
 			angle += 90
 			position = striker_y
-			force = 10000
+			force = 6000#1700
 		else:
 			if coin_y > 500:
 				striker_y = striker_positions[0]
@@ -265,7 +265,7 @@ def coin_positions(*args):
 			intersection_point_y = intersection_point[1]
 			slope = (intersection_point_y - striker_y) / (intersection_point_x - striker_x)
 			angle = math.degrees(math.atan(slope))
-			force = 1200
+			force = 6000#1700
 			position = striker_y
 			angle += 90
 
@@ -498,7 +498,7 @@ def coin_positions1(args, return_dict):
 			angle = math.degrees(math.atan(m))
 			angle += 90
 			int_x = 846.7742
-			if int_y > 806.5416 or int_y < 153.2258:
+			if int_y > 806.5416 or int_y < 193.5484:
 				continue
 			intersection_point = (int_x, int_y)
 			path = True
