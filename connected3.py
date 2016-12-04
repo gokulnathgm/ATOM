@@ -35,6 +35,7 @@ def ang(lineA, lineB):
     dot_prod = dot(vA, vB)
     magA = dot(vA, vA) ** 0.5
     magB = dot(vB, vB) ** 0.5
+    print 'angle: ', dot_prod / magB / magA
     angle = math.acos(dot_prod / magB / magA)
     ang_deg = math.degrees(angle) % 360
     if ang_deg - 180 >= 0:
@@ -70,23 +71,6 @@ def distance_between_points(point1, point2):
 	x2, y2 = point2[0], point2[1]
 	distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 	return distance
-
-def reflection_point(point1, point2, pocket):
-	x1, y1 = point1[0], point1[1]
-	x2, y2 = point2[0], point2[1]
-	if pocket == 4:
-		y = 25
-		x = ((x1 * y) + (x2 * y) - (x1 * y2) - (x2 * y1)) / ((2 * y) - y1 - y2)
-		point = (x, y)
-	elif pocket == 2:
-		y = 975
-		x = ((x1 * y) + (x2 * y) - (x1 * y2) - (x2 * y1)) / ((2 * y) - y1 - y2)
-		point = (x, y)
-	elif pocket == 3 or pocket == 1:
-		x = 975
-		y = ((x * y1) + (x * y2) - (x1 * y2) - (x2 * y1)) / ((2 * x) - x1 - x2)
-		point = (x, y)
-	return point
 
 def emit_response(*args):
 	print 'Emit response'
@@ -129,48 +113,54 @@ def coin_positions(*args):
 	positions.extend(red_coin)
 	positions.extend(white_coins)
 	positions.extend(black_coins)
-	connected4 = []
+	strikes = []
 	clean1 = clean_strikes(positions, pocket3_point, positions, 50)
-	print 'clean1: ', clean1
 	for coins in clean1:
 		coins_x, coins_y = coins['x'], coins['y']
 		coins_point = (coins_x, coins_y)
-		hitpt = hit_point(coins_point, pocket3_point, 3)
-		hit_x, hit_y = hitpt[0], hitpt[1]
-		print 'hitpt: ', hitpt, coins
-		for i in range(194, 806, 51):
-			striker_y = 500
-			striker_point = (striker_x, striker_y)
-			strike_point = reflection_point(striker_point, hitpt, 3)
-			distance = distance_between_points(striker_point, strike_point) + distance_between_points(strike_point, coins_point)
-			force = distance * 6.8
-			if force > 10000:
-				force = 10000 
-			strike_x, strike_y = strike_point[0], strike_point[1]
-			print 'strike point', strike_point
-			path = True
-			for coin in positions:
-				if coin == coins:
-					continue
-				coin_x, coin_y = coin['x'], coin['y']
-				if Point(coin_x, coin_y).intersects(LineString((striker_point, strike_point, hitpt)).buffer(55)):
-					path = False
+		intxn = hit_point(coins_point, pocket3_point, 3)
+		print 'hitpt', intxn, coins
+		intxn_x, intxn_y = intxn[0], intxn[1]
+		for coin in positions:
+			coin_x = coin['x']
+			coin_y = coin['y']
+			coin_point = (coin_x, coin_y)
+			if coin == coins or coin_y > coins_y or intxn_x > coin_x:
+				continue
+			for i in range(194, 806, 51):
+				strike = {}
+				if i > coin_y:
 					break
-			if path:
-				coin_pocket = (hitpt, pocket3_point)
-				coin_striker = (hitpt, strike_point)
-				angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
-				position = striker_y
-				slope = (striker_y - strike_y) / (striker_x - strike_x)
-				angle = math.degrees(math.atan(slope)) + 90
-				# force = 6000
-				break
-		if path:
-			break
-
-	print 'angle mutual: ', angle_striker_coin_pocket
-		
-	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
+				striker_y = i
+				striker_point = (striker_x, striker_y)
+				hitpt = hit_point(coin_point, intxn, 3)
+				path = True
+				for j in positions:
+					if j == coin or j == coins:
+						continue
+					pos_x = j['x']
+					pos_y = j['y']
+					if Point(pos_x, pos_y).intersects(LineString((striker_point, hitpt)).buffer(55)) or Point(pos_x, pos_y).intersects(LineString((hitpt, intxn)).buffer(50)):
+						path = False
+						break
+				if path:
+					slope = (striker_y - hitpt[1]) / (striker_x - hitpt[0])
+					angle = math.degrees(math.atan(slope)) + 270
+					coin_pocket = (hitpt, intxn)
+					coin_striker = (hitpt, striker_point)
+					angle_striker_coin_pocket = ang(coin_pocket, coin_striker)
+					strike['angle'] = angle
+					strike['position'] = i
+					strike['angle_mutual'] = angle_striker_coin_pocket
+					strike['type'] = coins['type']
+					strike['force'] = 5000
+					strike['function'] = 'pocket3_connected'
+					strike['id'] = coins['id']
+					strikes.append(strike)
+	print 'strikes', strikes
+	position = strikes[0]['position']
+	angle = strikes[0]['angle']
+	socketIO.emit('player_input', {'position': position, 'force': 5000, 'angle': angle})
 	socketIO.on('player_input', emit_response)
 
 socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})

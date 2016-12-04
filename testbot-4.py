@@ -69,6 +69,7 @@ def coin_positions(*args):
 		coin_x, coin_y = coin['x'], coin['y']
 		coin_point = (coin_x, coin_y)
 		strike_point = reflection_point(coin_point, pocket4_point)
+		print 
 		print 'strike_point', strike_point
 		strike_x, strike_y = strike_point[0], strike_point[1]
 		m = (coin_y - strike_y) / (coin_x - strike_x)

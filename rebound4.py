@@ -134,12 +134,18 @@ def coin_positions(*args):
 	for coins in clean1:
 		coins_x, coins_y = coins['x'], coins['y']
 		coins_point = (coins_x, coins_y)
+		print 'distance_between_points: ', distance_between_points(coins_point, pocket4_point)
 		hitpt = hit_point(coins_point, pocket4_point, 4)
 		hit_x, hit_y = hitpt[0], hitpt[1]
 		for i in range(806, 194, -51):
-			striker_y = 200
+			striker_y = 500
 			striker_point = (striker_x, striker_y)
 			strike_point = reflection_point(striker_point, hitpt, 4)
+			distance = distance_between_points(striker_point, strike_point) + distance_between_points(strike_point, coins_point)
+			force = distance * 6.9
+			if force > 10000:
+				force = 10000 
+			print 'distance_travelled: ', distance
 			strike_x, strike_y = strike_point[0], strike_point[1]
 			path = True
 			for coin in positions:
@@ -156,12 +162,12 @@ def coin_positions(*args):
 				position = striker_y
 				slope = (striker_y - strike_y) / (striker_x - strike_x)
 				angle = math.degrees(math.atan(slope)) + 90
-				force = 6000
+				# force = 5000
 				break
 		if path:
 			break
 	print 'angle mutual: ', angle_striker_coin_pocket
-	socketIO.emit('player_input', {'position': position, 'force': 9000, 'angle': angle})
+	socketIO.emit('player_input', {'position': position, 'force': force, 'angle': angle})
 	socketIO.on('player_input', emit_response)
 
 socketIO.emit('connect_game', {'playerKey': player1Key, 'gameKey': gameKey})
